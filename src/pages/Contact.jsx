@@ -1,52 +1,83 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { Mail, Phone, MapPin } from "lucide-react";
 
-export default function Contact({ isTransitioning, onNavigate }) {
+export default function ContactUs() {
   return (
-    <motion.section
-      className="relative w-full min-h-screen bg-[#1B1716] text-white pt-[100px] px-[80px]"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: isTransitioning ? 0 : 1 }}
-      transition={{ duration: 0.8, delay: 0.3 }}
-    >
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: isTransitioning ? 0 : 1, y: isTransitioning ? 50 : 0 }}
-        transition={{ duration: 0.8, delay: 0.5 }}
-      >
-        <h1 className="text-[64px] font-inter font-bold mb-6">Contact Us</h1>
-        <p className="text-[22px] font-inter text-gray-200 max-w-4xl leading-relaxed mb-8">
-          Welcome to the Contact page. This is where your content will go.
-        </p>
+    <div className="min-h-screen bg-[#1B1716] text-white px-6 py-20 flex items-center justify-center">
+      <div className="max-w-6xl w-full grid md:grid-cols-2 gap-12">
+        {/* LEFT INFO */}
+        <motion.div
+          initial={{ opacity: 0, x: -60 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8 }}
+          className="space-y-8"
+        >
+          <h1 className="text-5xl font-bold mb-4">Let’s Build Something Great Together</h1>
+          <p className="text-gray-300 text-lg leading-relaxed">
+            Whether you have a project in mind, a question, or just want to explore how Blitz Innovation can
+            transform your business digitally — we’re here to help. Reach out and start your innovation journey today.
+          </p>
 
-        {/* Navigation Buttons */}
-        <div className="flex gap-4 mt-12">
-          <button
-            onClick={() => onNavigate("home")}
-            className="px-6 py-3 bg-[#F81A27] text-white font-semibold rounded-lg hover:bg-[#C70008] transition-all duration-300"
+          <div className="space-y-4">
+            <div className="flex items-center gap-4">
+              <Mail className="text-[#3EA971]" />
+              <p>hello@blitzinnovation.com</p>
+            </div>
+            <div className="flex items-center gap-4">
+              <Phone className="text-[#3EA971]" />
+              <p>+91 98765 43210</p>
+            </div>
+            <div className="flex items-center gap-4">
+              <MapPin className="text-[#3EA971]" />
+              <p>Surat, Gujarat, India</p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* RIGHT FORM */}
+        <motion.form
+          initial={{ opacity: 0, x: 60 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8 }}
+          className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-8 shadow-lg space-y-6"
+        >
+          <div>
+            <label className="block text-sm text-gray-400 mb-2">Name</label>
+            <input
+              type="text"
+              className="w-full bg-transparent border border-gray-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#3EA971]"
+              placeholder="Your Name"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm text-gray-400 mb-2">Email</label>
+            <input
+              type="email"
+              className="w-full bg-transparent border border-gray-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#3EA971]"
+              placeholder="you@example.com"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm text-gray-400 mb-2">Message</label>
+            <textarea
+              rows="4"
+              className="w-full bg-transparent border border-gray-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#3EA971]"
+              placeholder="Write your message..."
+            />
+          </div>
+
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            transition={{ type: "spring", stiffness: 200 }}
+            className="w-full bg-[#3EA971] text-black py-3 rounded-lg font-semibold hover:bg-[#35a267] transition"
           >
-            Home
-          </button>
-          <button
-            onClick={() => onNavigate("about")}
-            className="px-6 py-3 bg-[#F81A27] text-white font-semibold rounded-lg hover:bg-[#C70008] transition-all duration-300"
-          >
-            About
-          </button>
-          <button
-            onClick={() => onNavigate("services")}
-            className="px-6 py-3 bg-[#F81A27] text-white font-semibold rounded-lg hover:bg-[#C70008] transition-all duration-300"
-          >
-            Services
-          </button>
-          <button
-            onClick={() => onNavigate("blogs")}
-            className="px-6 py-3 bg-[#F81A27] text-white font-semibold rounded-lg hover:bg-[#C70008] transition-all duration-300"
-          >
-            Blogs
-          </button>
-        </div>
-      </motion.div>
-    </motion.section>
+            Send Message
+          </motion.button>
+        </motion.form>
+      </div>
+    </div>
   );
 }

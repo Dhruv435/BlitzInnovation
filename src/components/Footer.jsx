@@ -1,5 +1,6 @@
 import React from "react";
-import logo from "../assets/BlitzLogo.png";
+// 🎯 FIX: Changed 'BlitzLogo.png' to 'Blitzlogo.png' to match the file structure
+import logo from "../assets/Blitzlogo.png";
 import { motion } from "framer-motion";
 import {
   FaInstagram,

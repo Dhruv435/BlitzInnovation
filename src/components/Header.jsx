@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import logo from "../assets/BlitzLogo.png";
+import logo from "../assets/Blitzlogo.png"; // <-- FIXED: Changed 'BlitzLogo.png' to 'Blitzlogo.png'
 import {
   MessageSquare,
   Send,

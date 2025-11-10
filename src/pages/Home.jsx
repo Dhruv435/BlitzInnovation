@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Blitzbg from "../assets/Blitzbg.svg";
+import Blitzbg from "../assets/blitzbg.svg"; // <-- FIXED: Changed 'Blitzbg.svg' to 'blitzbg.svg'
 import hero1 from "../assets/hero1.png";
 import hero2 from "../assets/hero2.png";
 import hero3 from "../assets/hero3.png";
@@ -169,6 +169,8 @@ export default function Home({ isTransitioning }) {
                 `,
               }}
               whileTap={{ scale: 0.95 }}
+              // IMPORTANT: I see you are using alert() here. For compatibility with the running environment, 
+              // I highly recommend replacing this with a custom message box UI in the future.
               onClick={() => alert("Learn More clicked!")}
             >
               Learn More
