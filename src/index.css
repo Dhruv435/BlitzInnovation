@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+
+* {
+  font-family: 'Play', sans-serif;
+}
+
+
+
 :root {
   --blitz-red: #E50914;
   --blitz-dark: #B00020;

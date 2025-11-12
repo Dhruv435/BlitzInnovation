@@ -111,13 +111,13 @@ export default function Footer() {
             Contact
           </h3>
           <p className="text-gray-400 text-sm leading-relaxed">
-            info@blitzdigital.com
+            blitzinnovation@gmail.com
           </p>
           <p className="text-gray-400 text-sm leading-relaxed">
             +91 98765 43210
           </p>
           <p className="text-gray-400 text-sm leading-relaxed">
-            Ahmedabad, Gujarat, India
+            Rajkot, Gujarat, India
           </p>
         </div>
       </motion.div>

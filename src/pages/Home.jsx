@@ -9,29 +9,33 @@ import hero4 from "../assets/hero4.png";
 
 export default function Home({ isTransitioning, currentSlide, onSlideChange, onNavigate }) {
   const navigate = useNavigate();
-  
+
   const heroData = [
     {
       id: 1,
-      title: "Design the Future.\nBuild with Blitz.",
+      title:
+        ' <span style="color:#D7001A;">Design</span> the Future.<br/>Build with <span style="color:#1B1716;">Blitz.</span>',
       desc: "We craft elegant digital experiences that merge technology, creativity, and precision — bringing ideas to life with clean design and powerful performance.",
       image: hero1,
     },
     {
       id: 2,
-      title: "Empowering Vision.\nCode Beyond Limits.",
+      title:
+        'Empowering <span style="color:#1B1716;">Vision.</span><br/><span style="color:#D7001A;">Code</span> Beyond Limits.',
       desc: "From ideas to execution, we shape brands and build seamless digital products with pixel-perfect precision.",
       image: hero2,
     },
     {
       id: 3,
-      title: "Innovate. Create. Inspire.",
+      title:
+        '<span style="color:#D7001A;">Innovate.</span> Create. Inspire.',
       desc: "Experience innovation with purpose – every design and line of code reflects the art of simplicity and sophistication.",
       image: hero3,
     },
     {
       id: 4,
-      title: "Elevate Your Digital Presence.",
+      title:
+        '<span style="color:#D7001A;">Elevate</span> Your <span style="color:#1B1716;">Digital</span> Presence.',
       desc: "Transform your business with digital craftsmanship that blends technology, art, and emotion effortlessly.",
       image: hero4,
     },
@@ -87,7 +91,6 @@ export default function Home({ isTransitioning, currentSlide, onSlideChange, onN
     exit: { opacity: 0, scale: 0.95, transition: { duration: 1 } },
   };
 
-  // Learn More triggers page transition animation
   const handleLearnMore = () => {
     if (onNavigate) {
       onNavigate("/about");
@@ -98,7 +101,7 @@ export default function Home({ isTransitioning, currentSlide, onSlideChange, onN
 
   return (
     <section
-      className="relative w-full h-screen bg-[#1B1716] text-white overflow-hidden mt-[50px]"
+      className="relative w-full h-screen bg-[#1B1716] text-white overflow-hidden mt-[60px]"
       style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100vh" }}
     >
       {/* Background */}
@@ -125,14 +128,14 @@ export default function Home({ isTransitioning, currentSlide, onSlideChange, onN
             animate="center"
             exit="exit"
             style={{ y: yHero }}
-            className="absolute top-0 right-[-2%] z-0 object-contain sm:w-auto sm:h-auto w-[1200px] h-[790px] max-w-[1440px] max-h-[790px]"
+            className="absolute top-[-10px] right-[-2%] z-0 object-contain sm:w-auto sm:h-auto w-[1200px] h-[790px] max-w-[1440px] max-h-[790px]"
           />
         )}
       </AnimatePresence>
 
       {/* Content */}
       {!isInitialLoad && (
-        <div className="relative z-10 h-full flex flex-col justify-center pl-[20px] sm:pl-[80px] -ml-2 max-w-3xl">
+        <div className="relative z-10 h-full flex flex-col justify-center mt-[-130px] sm:mt-[0px] pl-[20px] sm:pl-[80px] -ml-2 max-w-3xl">
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={`content-${currentHero.id}`}
@@ -142,34 +145,26 @@ export default function Home({ isTransitioning, currentSlide, onSlideChange, onN
               exit="exit"
               style={{ y: yContent }}
             >
-              <h1 className="text-[32px] sm:text-[48px] md:text-[64px] font-inter font-bold leading-tight whitespace-pre-line">
-                {currentHero.title}
-              </h1>
+              <h1
+                className="text-[32px] sm:text-[48px] md:text-[64px] font-inter font-bold leading-tight whitespace-pre-line"
+                dangerouslySetInnerHTML={{ __html: currentHero.title }}
+              ></h1>
+
               <p className="mt-6 text-[18px] sm:text-[20px] md:text-[22px] font-inter text-gray-200 leading-relaxed max-w-xl">
                 {currentHero.desc}
               </p>
 
               <motion.button
                 style={{
-                  y: yButton,
-                  background: "rgba(255, 255, 255, 0.06)",
-                  border: "1px solid rgba(255, 255, 255, 0.15)",
-                  boxShadow: `
-                    inset -3px 3px 10px rgba(255,255,255,0.4),
-                    0 -2px 10px rgba(255,255,255,0.4),
-                    0 6px 20px rgba(0,0,0,0.35)
-                  `,
+                  background: "#E50922",
+                  border: "1px solid #1B1716",
+                  borderRadius: "0px",
+                  color: "white",
                 }}
-                className="mt-10 px-4 py-2 text-base sm:px-6 sm:py-2.5 sm:text-lg font-semibold text-white transition-all duration-500 w-fit rounded-[23px]"
-                animate={{ opacity: 1, y: 0 }}
+                className="mt-10 px-6 py-2.5 text-lg font-semibold transition-all duration-300"
                 whileHover={{
                   scale: 1.05,
-                  background: "rgba(255, 255, 255, 0.12)",
-                  boxShadow: `
-                    inset -3px 3px 12px rgba(255,255,255,0.5),
-                    0 -2px 12px rgba(255,255,255,0.5),
-                    0 8px 25px rgba(0,0,0,0.35)
-                  `,
+                  background: "#a00006",
                 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleLearnMore}
@@ -184,7 +179,7 @@ export default function Home({ isTransitioning, currentSlide, onSlideChange, onN
       {/* Bottom-right slide indicator */}
       {!isInitialLoad && (
         <motion.div
-          className="absolute right-4 sm:right-16 flex items-center gap-3 sm:gap-4 z-10 bottom-[120px] sm:bottom-[85px]"
+          className="absolute right-4 sm:right-16 flex items-center gap-3 sm:gap-4 z-10 bottom-[200px] sm:bottom-[72px]"
           initial={{ opacity: 0 }}
           animate={{ opacity: isTransitioning ? 0 : 1 }}
           transition={{ duration: 0.6 }}

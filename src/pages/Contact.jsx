@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
+import Footer from "../components/Footer";
 
 // --- Framer Motion Variants for Staggered Animations ---
 
@@ -85,7 +86,7 @@ export default function ContactUs() {
   // to make the map area feel integrated.
   const mapUrl = `https://maps.google.com/maps?q=${mapCenter}&z=${mapZoom}&output=embed`;
 
-  return (
+  return (<>
     <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center p-4 sm:p-10 font-inter relative overflow-hidden">
       
       {/* Background radial gradient for visual depth - Updated color to #ED1B24 */}
@@ -122,7 +123,7 @@ export default function ContactUs() {
             <ContactDetail 
               icon={Mail} 
               label="Email Address" 
-              value="hello@blitzinnovation.com" 
+              value="blitzinnovation@gmail.com" 
             />
             <ContactDetail 
               icon={Phone} 
@@ -133,7 +134,7 @@ export default function ContactUs() {
             <ContactDetail 
               icon={MapPin} 
               label="Office Location" 
-              value="Surat, Gujarat, India" 
+              value="Rajkot, Gujarat, India" 
             />
           </motion.div>
           
@@ -150,7 +151,7 @@ export default function ContactUs() {
         >
           <FormInput 
             label="Your Name" 
-            placeholder="John Doe" 
+            placeholder="blitz Innovation" 
           />
           
           <div className="grid sm:grid-cols-2 gap-6">
@@ -186,10 +187,33 @@ export default function ContactUs() {
           >
             {isSending ? (
               <>
-                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
+<div className="flex flex-col items-center space-y-3">
+  {/* Dark mode spinner */}
+  <svg
+    className="animate-spin h-5 w-5 text-[#1B1716]"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+  >
+    <circle
+      className="opacity-25"
+      cx="12"
+      cy="12"
+      r="10"
+      stroke="currentColor"
+      strokeWidth="4"
+    ></circle>
+    <path
+      className="opacity-75"
+      fill="currentColor"
+      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+    ></path>
+  </svg>
+
+  {/* Rajkot location text */}
+  <p className="text-sm font-medium text-[#1B1716]">Rajkot, India</p>
+</div>
+
                 Sending...
               </>
             ) : (
@@ -233,5 +257,7 @@ export default function ContactUs() {
       `}</style>
 
     </div>
+    <Footer />
+    </>
   );
 }

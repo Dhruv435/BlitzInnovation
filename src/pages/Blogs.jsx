@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 import { FaShareAlt, FaHeart, FaTimes } from "react-icons/fa";
+import Footer from "../components/Footer";
 
 const initialBlogs = [
   {
@@ -47,7 +48,7 @@ export default function Blogs() {
   const [blogs] = useState(initialBlogs);
   const [openBlog, setOpenBlog] = useState(null);
 
-  return (
+  return (<>
     <div className="layout-wrapper red-theme min-h-screen relative bg-[#1a0000]">
       <div className="max-w-7xl mx-auto text-center py-20 relative z-10">
         <h1 className="text-5xl font-bold mb-12 text-white drop-shadow-lg">
@@ -127,5 +128,9 @@ export default function Blogs() {
         )}
       </AnimatePresence>
     </div>
+     <Footer />
+    </>
+   
   );
+  
 }

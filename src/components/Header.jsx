@@ -116,10 +116,10 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
   return (
     <>
       <header
-        className="fixed top-0 left-0 w-full h-[60px] sm:h-[65px] z-40 flex items-center justify-between backdrop-blur-xl bg-[rgba(27,23,22,0.6)] border-b border-[rgba(255,255,255,0.15)] shadow-[0_8px_32px_rgba(0,0,0,0.37)]"
+        className="fixed top-0 left-0 w-full h-[70px] sm:h-[65px] z-40 flex items-center justify-between backdrop-blur-xl bg-[rgba(27,23,22,0.6)] border-b border-[rgba(255,255,255,0.15)] shadow-[0_8px_32px_rgba(0,0,0,0.37)]"
         style={{
-          WebkitBackdropFilter: "blur(20px)",
-          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(3px)",
+          backdropFilter: "blur(9px)",
         }}
       >
         {/* ✅ Left: Logo */}
@@ -127,7 +127,7 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
           <img
             src={logo}
             alt="Blitz Logo"
-            className="h-12 sm:h-[70px] cursor-pointer transition-transform duration-500 hover:scale-105"
+            className="h-16 sm:h-[70px] cursor-pointer transition-transform duration-500 hover:scale-105"
             onClick={handleLogoClick}
           />
         </div>
@@ -137,7 +137,7 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
           {buttons.map((btn, i) => (
             <div
               key={i}
-              className="group relative w-[60px] h-[60px] sm:w-[65px] sm:h-[65px] flex justify-center items-center transition-all duration-500 cursor-pointer"
+              className="group relative w-[70px] h-[70px] sm:w-[65px] sm:h-[65px] flex justify-center items-center transition-all duration-500 cursor-pointer"
               style={{
                 backgroundColor: btn.color,
                 boxShadow: "0 4px 20px rgba(248,26,39,0.3)",
@@ -148,35 +148,42 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
             >
               {btn.label === "Menu" ? (
                 <button
-                  onClick={handleMenuClick}
-                  className="relative group focus:outline-none"
-                >
-                  <div className="relative flex items-center justify-center rounded-full w-[45px] h-[45px] sm:w-[40px] sm:h-[40px] transition-all duration-300 backdrop-blur-lg">
-                    {!menuOpen ? (
-                      <div className="flex flex-col justify-between w-[18px] h-[18px] transform transition-all duration-300 origin-center">
-                        <div className="bg-white h-[2px] w-1/2 rounded transition-all duration-300 origin-right delay-75"></div>
-                        <div className="bg-white h-[1px] rounded"></div>
-                        <div className="bg-white h-[2px] w-1/2 rounded self-end transition-all duration-300 origin-left delay-75"></div>
-                      </div>
-                    ) : (
-                      <X className="text-white" size={26} />
-                    )}
-                  </div>
-                </button>
+  onClick={handleMenuClick}
+  className="relative group focus:outline-none"
+>
+  <div className="relative flex items-center justify-center rounded-full w-[45px] h-[45px] sm:w-[40px] sm:h-[40px] transition-all duration-300 backdrop-blur-lg">
+    {!menuOpen ? (
+      <div className="flex flex-col justify-between w-[18px] h-[18px] transform transition-all duration-300 origin-center">
+        <div className="bg-[#1B1716] h-[3px] w-1/2 rounded transition-all duration-300 origin-right delay-75"></div>
+        <div className="bg-[#1B1716] h-[2px] rounded"></div>
+        <div className="bg-[#1B1716] h-[3px] w-1/2 rounded self-end transition-all duration-300 origin-left delay-75"></div>
+      </div>
+    ) : (
+      <X className="text-[#1B1716]" size={26} />
+    )}
+  </div>
+</button>
+
               ) : (
-                <button
-                  onClick={handleShareClick}
-                  className="text-white transition-transform duration-500 focus:outline-none"
-                >
-                  {shareOpen ? <X size={26} /> : btn.icon}
-                </button>
+              <button
+  onClick={handleShareClick}
+  className="transition-transform duration-500 focus:outline-none"
+>
+  {shareOpen ? (
+    <X size={26} className="text-[#1B1716]" />
+  ) : (
+    <span style={{ color: "#1B1716", fontWeight: "600", fontSize: "13px" }}>SHARE</span>
+  )}
+</button>
+
+
               )}
             </div>
           ))}
         </div>
 
         {/* ✅ MENU LIST */}
-        <div className="fixed top-[60px] sm:top-[65px] right-0 z-30 flex flex-col items-end pointer-events-none">
+        <div className="fixed top-[70px] sm:top-[65px] right-0 z-30 flex flex-col items-end pointer-events-none">
           {menuItems
             .filter((item) => item.page !== currentPath)
             .map((item, index) => (
@@ -200,10 +207,10 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
                   style={{
                     width: "50px",
                     height: "55px",
-                    background: "rgba(248,26,39,0.8)",
+                    background: "rgba(248,26,39,0.85)",
                     color: "white",
                     borderBottom: "1px solid rgba(255,255,255,0.2)",
-                    backdropFilter: "blur(12px)",
+                    backdropFilter: "blur(16px)",
                   }}
                 >
                   {item.icon}
@@ -213,13 +220,12 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
                   style={{
                     width: "140px",
                     height: "55px",
-                    background: "rgba(27,23,22,0.7)",
-                    color: "white",
-                    fontFamily: "Proxima Nova, sans-serif",
+                    background: "rgba(27,23,22,0.9)",
+                    color: "white",               
                     fontWeight: 500,
                     fontSize: "14px",
                     borderBottom: "1px solid rgba(255,255,255,0.15)",
-                    backdropFilter: "blur(12px)",
+                    backdropFilter: "blur(16px)",
                   }}
                 >
                   {item.label}
@@ -229,15 +235,15 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
         </div>
 
         {/* ✅ SHARE BOX */}
-        <div className="fixed top-[60px] sm:top-[65px] right-0 z-30 flex flex-col items-end pointer-events-none">
+        <div className="fixed top-[70px] sm:top-[65px] right-0 z-30 flex flex-col items-end pointer-events-none">
           {shareItems.map((item, index) => (
             <div
               key={index}
               onClick={() => handleShareItemClick(item.url)}
               className="flex items-center justify-center cursor-pointer transition-all duration-300 hover:brightness-125 hover:scale-110"
               style={{
-                width: "50px",
-                height: "50px",
+                width: "60px",
+                height: "60px",
                 background: "rgba(199,0,8,0.75)",
                 borderBottom: "1px solid rgba(255,255,255,0.15)",
                 color: "white",
@@ -291,11 +297,11 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
           {/* Left Arrow Button */}
           <div
             onClick={handlePrevSlide}
-            className={`w-[60px] h-[60px] sm:w-[65px] sm:h-[65px] flex items-center justify-center cursor-pointer transition-all duration-300 ${
-              isChanging ? "opacity-50 pointer-events-none" : "hover:opacity-80 hover:bg-opacity-90"
+            className={`w-[70px] h-[70px] sm:w-[70px] sm:h-[70px] flex items-center justify-center cursor-pointer transition-all duration-300 ${
+              isChanging ? "opacity-80 pointer-events-none" : "hover:opacity-100 hover:bg-opacity-100"
             }`}
             style={{
-              backgroundColor: "#1B1716",
+              backgroundColor: "#C70008",
             }}
           >
             <ChevronLeft 
@@ -308,11 +314,11 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
           {/* Right Arrow Button */}
           <div
             onClick={handleNextSlide}
-            className={`w-[60px] h-[60px] sm:w-[65px] sm:h-[65px] flex items-center justify-center cursor-pointer transition-all duration-300 ${
-              isChanging ? "opacity-50 pointer-events-none" : "hover:opacity-80 hover:bg-opacity-90"
+            className={`w-[70px] h-[70px] sm:w-[70px] sm:h-[70px] flex items-center justify-center cursor-pointer transition-all duration-300 ${
+              isChanging ? "opacity-80 pointer-events-none" : "hover:opacity-100 hover:bg-opacity-100"
             }`}
             style={{
-              backgroundColor: "#161313",
+              backgroundColor: "#F81A27",
             }}
           >
             <ChevronRight 
@@ -325,11 +331,10 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
           {/* Explore Now Button - MOBILE ONLY (Full Width) */}
           <div
             onClick={handleExploreClick}
-            className="sm:hidden flex items-center justify-center h-[60px] cursor-pointer transition-all duration-300 hover:opacity-80 hover:bg-opacity-90"
+            className="sm:hidden flex items-center justify-center h-[70px] cursor-pointer transition-all duration-300 hover:opacity-80 hover:bg-opacity-90"
             style={{
               backgroundColor: "#1B1716",
               color: "white",
-              fontFamily: "Proxima Nova, sans-serif",
               fontWeight: 600,
               fontSize: "16px",
               width: "calc(100vw - 120px)",

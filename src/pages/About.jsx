@@ -1,19 +1,7 @@
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Target,
-  Eye,
-  Award,
-  Users,
-  Briefcase,
-  TrendingUp,
-  CheckCircle,
-  Globe,
-  Lightbulb,
-  Shield,
-  ArrowUp,
-  X,
-} from "lucide-react";
+import {Target,Eye,Award,Users,Briefcase,TrendingUp,CheckCircle,Globe,Lightbulb,Shield,ArrowUp,X,} from "lucide-react";
+import Footer from "../components/Footer";
 
 // --- ANIMATION VARIANTS ---
 const fadeUp = {
@@ -318,7 +306,7 @@ const AchievementsSection = () => {
 const TeamSection = () => {
   const sectionRef = useRef(null);
 
-  return (
+  return ( 
     <motion.section
       ref={sectionRef}
       id="team"
@@ -449,7 +437,7 @@ const MobileQuickNav = () => {
       {/* Quick Menu Button */}
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-0 left-0 z-50 h-[60px] bg-[#1B1716] text-white font-semibold flex items-center justify-center transition-all"
+        className="fixed bottom-0 left-0 z-50 h-[70px] bg-[#1B1716] text-white font-semibold flex items-center justify-center transition-all"
         style={{
           width: "calc(100vw - 60px)",
           borderTop: "1px solid rgba(255,255,255,0.1)",
@@ -467,7 +455,7 @@ const MobileQuickNav = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             onClick={scrollToTop}
-            className="fixed bottom-0 right-0 z-50 w-[60px] h-[60px] bg-[#1B1716] text-white flex items-center justify-center border-l border-[#FFFFFF]"
+            className="fixed bottom-0 right-0 z-50 w-[70px] h-[70px] bg-[#1B1716] text-white flex items-center justify-center border-l border-[#FFFFFF]"
             whileTap={{ scale: 0.95 }}
           >
             <ArrowUp size={24} />
@@ -491,7 +479,7 @@ const MobileQuickNav = () => {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="fixed bottom-0 left-0 right-0 z-50 bg-[#1B1716] border-t border-[#2E2A29] rounded-t-3xl p-6 max-h-[70vh] overflow-y-auto"
+              className="fixed bottom-0 left-0 right-0 z-50  bg-[#1B1716] border-t border-[#2E2A29] rounded-t-3xl p-6 max-h-[70vh] overflow-y-auto"
             >
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-white">Quick Navigation</h3>
@@ -526,7 +514,7 @@ const MobileQuickNav = () => {
 
 // Main Component
 export default function About() {
-  return (
+  return ( <>
     <motion.div
       className="relative w-full min-h-screen bg-[#1B1716] text-white overflow-hidden"
       initial={{ opacity: 0 }}
@@ -541,5 +529,7 @@ export default function About() {
       <CTASection />
       <MobileQuickNav />
     </motion.div>
+    <Footer />
+    </>
   );
 }
