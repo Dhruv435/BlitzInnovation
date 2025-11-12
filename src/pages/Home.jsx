@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import Blitzbg from "../assets/blitzbg.svg"; // <-- FIXED: Changed 'Blitzbg.svg' to 'blitzbg.svg'
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import Blitzbg from "../assets/blitzbg.svg";
 import hero1 from "../assets/hero1.png";
 import hero2 from "../assets/hero2.png";
 import hero3 from "../assets/hero3.png";
 import hero4 from "../assets/hero4.png";
 
-export default function Home({ isTransitioning }) {
+export default function Home({ isTransitioning, currentSlide, onSlideChange, onNavigate }) {
+  const navigate = useNavigate();
+  
   const heroData = [
     {
       id: 1,
@@ -36,176 +39,186 @@ export default function Home({ isTransitioning }) {
 
   const [current, setCurrent] = useState(0);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [direction, setDirection] = useState(0);
+  const intervalRef = useRef(null);
+
+  const resetInterval = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(() => {
+      setDirection(1);
+      setCurrent((prev) => (prev + 1) % heroData.length);
+    }, 7000);
+  };
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
-    
-    // Complete initial animation after 1.5 seconds
-    const initialTimeout = setTimeout(() => {
-      setIsInitialLoad(false);
-    }, 1500);
-
-    const interval = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % heroData.length);
-    }, 7000);
+    const initialTimeout = setTimeout(() => setIsInitialLoad(false), 1500);
+    resetInterval();
 
     return () => {
       clearTimeout(initialTimeout);
-      clearInterval(interval);
+      if (intervalRef.current) clearInterval(intervalRef.current);
       document.body.style.overflow = "auto";
     };
   }, []);
 
+  useEffect(() => {
+    if (currentSlide !== undefined && currentSlide !== current) {
+      setDirection(currentSlide > current ? 1 : -1);
+      setCurrent(currentSlide);
+      resetInterval();
+    }
+  }, [currentSlide]);
+
+  useEffect(() => {
+    if (onSlideChange && !isInitialLoad) onSlideChange(current);
+  }, [current]);
+
   const currentHero = heroData[current];
+
+  const { scrollY } = useScroll();
+  const yHero = useTransform(scrollY, [0, 300], [0, 50]);
+  const yContent = useTransform(scrollY, [0, 300], [0, 30]);
+  const yButton = useTransform(scrollY, [0, 300], [0, 20]);
+
+  const fadeVariants = {
+    enter: { opacity: 0, scale: 1.05 },
+    center: { opacity: 1, scale: 1, transition: { duration: 1.2, ease: [0.43, 0.13, 0.23, 0.96] } },
+    exit: { opacity: 0, scale: 0.95, transition: { duration: 1 } },
+  };
+
+  // Learn More triggers page transition animation
+  const handleLearnMore = () => {
+    if (onNavigate) {
+      onNavigate("/about");
+    } else {
+      navigate("/about");
+    }
+  };
 
   return (
     <section
       className="relative w-full h-screen bg-[#1B1716] text-white overflow-hidden mt-[50px]"
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100vh",
-      }}
+      style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100vh" }}
     >
-      {/* Blitz Background with initial animation */}
+      {/* Background */}
       <motion.img
         src={Blitzbg}
         alt="Blitz Background"
-        className="absolute left-1/2 transform -translate-x-1/2 z-[1] object-contain w-auto h-auto min-w-[100vw] min-h-[100vh]"
-        style={{
-          top: "0px",
-          maxWidth: "1440px",
-          maxHeight: "790px",
-        }}
+        className="absolute left-1/2 transform -translate-x-[85%] sm:-translate-x-1/2 z-[10] object-contain w-[1440px] h-[790px] max-w-none"
+        style={{ top: "0px" }}
         initial={{ y: -100, opacity: 0 }}
-        animate={{
-          y: isTransitioning ? 100 : 0,
-          opacity: isTransitioning ? 0 : 1,
-        }}
-        transition={{ 
-          duration: isInitialLoad ? 1.2 : 0.8, 
-          ease: "easeInOut" 
-        }}
+        animate={{ y: isTransitioning ? 100 : 0, opacity: isTransitioning ? 0 : 1 }}
+        transition={{ duration: isInitialLoad ? 1.2 : 0.8, ease: [0.43, 0.13, 0.23, 0.96] }}
       />
 
-      {/* Hero Image - only shows after initial load */}
-      <AnimatePresence mode="wait">
+      {/* Hero Image */}
+      <AnimatePresence mode="wait" custom={direction}>
         {!isInitialLoad && (
           <motion.img
-            key={currentHero.id}
+            key={`hero-img-${currentHero.id}`}
             src={currentHero.image}
             alt="Hero"
-            initial={{ opacity: 0, x: 200 }}
-            animate={{ 
-              opacity: isTransitioning ? 0 : 1, 
-              x: isTransitioning ? -200 : 0 
-            }}
-            exit={{ opacity: 0, x: -200 }}
-            transition={{ duration: 1.6, ease: "easeInOut" }}
-            className="absolute right-[-8%] top-0 h-full w-auto object-contain z-0"
+            custom={direction}
+            variants={fadeVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            style={{ y: yHero }}
+            className="absolute top-0 right-[-2%] z-0 object-contain sm:w-auto sm:h-auto w-[1200px] h-[790px] max-w-[1440px] max-h-[790px]"
           />
         )}
       </AnimatePresence>
 
-      {/* Text Content - only shows after initial load */}
+      {/* Content */}
       {!isInitialLoad && (
-        <div className="relative z-10 h-full flex flex-col justify-center pl-[80px] max-w-3xl">
-          <AnimatePresence mode="wait">
-            <motion.h1
-              key={`title-${currentHero.id}`}
-              initial={{ opacity: 0, x: 150 }}
-              animate={{ 
-                opacity: isTransitioning ? 0 : 1, 
-                x: isTransitioning ? -150 : 0 
-              }}
-              exit={{ opacity: 0, x: -150 }}
-              transition={{ duration: 1.2 }}
-              className="text-[64px] font-inter font-bold leading-tight whitespace-pre-line"
+        <div className="relative z-10 h-full flex flex-col justify-center pl-[20px] sm:pl-[80px] -ml-2 max-w-3xl">
+          <AnimatePresence mode="wait" custom={direction}>
+            <motion.div
+              key={`content-${currentHero.id}`}
+              variants={fadeVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              style={{ y: yContent }}
             >
-              {currentHero.title}
-            </motion.h1>
+              <h1 className="text-[32px] sm:text-[48px] md:text-[64px] font-inter font-bold leading-tight whitespace-pre-line">
+                {currentHero.title}
+              </h1>
+              <p className="mt-6 text-[18px] sm:text-[20px] md:text-[22px] font-inter text-gray-200 leading-relaxed max-w-xl">
+                {currentHero.desc}
+              </p>
 
-            <motion.p
-              key={`desc-${currentHero.id}`}
-              initial={{ opacity: 0, x: 150 }}
-              animate={{ 
-                opacity: isTransitioning ? 0 : 1, 
-                x: isTransitioning ? -150 : 0 
-              }}
-              exit={{ opacity: 0, x: -150 }}
-              transition={{ duration: 1.2, delay: 0.2 }}
-              className="mt-6 text-[22px] font-inter font-normal leading-relaxed text-gray-200 max-w-xl"
-            >
-              {currentHero.desc}
-            </motion.p>
-
-            {/* Liquid Glass Learn More Button */}
-            <motion.button
-              key={`btn-${currentHero.id}`}
-              className="mt-10 px-6 py-2.5 text-lg font-semibold text-white backdrop-blur-[10px] transition-all duration-500 w-fit"
-              style={{
-                borderRadius: "23px",
-                background: "rgba(255, 255, 255, 0.06)",
-                border: "1px solid rgba(255, 255, 255, 0.15)",
-                boxShadow: `
-                  inset -3px 3px 10px rgba(255,255,255,0.4),
-                  0 -2px 10px rgba(255,255,255,0.4),
-                  0 6px 20px rgba(0,0,0,0.35)
-                `,
-                backdropFilter: "blur(12px)",
-              }}
-              animate={{
-                opacity: isTransitioning ? 0 : 1,
-              }}
-              whileHover={{
-                scale: 1.05,
-                background: "rgba(255, 255, 255, 0.12)",
-                boxShadow: `
-                  inset -3px 3px 12px rgba(255,255,255,0.5),
-                  0 -2px 12px rgba(255,255,255,0.5),
-                  0 8px 25px rgba(0,0,0,0.35)
-                `,
-              }}
-              whileTap={{ scale: 0.95 }}
-              // IMPORTANT: I see you are using alert() here. For compatibility with the running environment, 
-              // I highly recommend replacing this with a custom message box UI in the future.
-              onClick={() => alert("Learn More clicked!")}
-            >
-              Learn More
-            </motion.button>
+              <motion.button
+                style={{
+                  y: yButton,
+                  background: "rgba(255, 255, 255, 0.06)",
+                  border: "1px solid rgba(255, 255, 255, 0.15)",
+                  boxShadow: `
+                    inset -3px 3px 10px rgba(255,255,255,0.4),
+                    0 -2px 10px rgba(255,255,255,0.4),
+                    0 6px 20px rgba(0,0,0,0.35)
+                  `,
+                }}
+                className="mt-10 px-4 py-2 text-base sm:px-6 sm:py-2.5 sm:text-lg font-semibold text-white transition-all duration-500 w-fit rounded-[23px]"
+                animate={{ opacity: 1, y: 0 }}
+                whileHover={{
+                  scale: 1.05,
+                  background: "rgba(255, 255, 255, 0.12)",
+                  boxShadow: `
+                    inset -3px 3px 12px rgba(255,255,255,0.5),
+                    0 -2px 12px rgba(255,255,255,0.5),
+                    0 8px 25px rgba(0,0,0,0.35)
+                  `,
+                }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleLearnMore}
+              >
+                Learn More
+              </motion.button>
+            </motion.div>
           </AnimatePresence>
         </div>
       )}
 
-      {/* Bottom-right navigation - only shows after initial load */}
+      {/* Bottom-right slide indicator */}
       {!isInitialLoad && (
-        <motion.div 
-          className="absolute right-16 flex items-center gap-4 z-10" 
-          style={{ bottom: "85px" }}
+        <motion.div
+          className="absolute right-4 sm:right-16 flex items-center gap-3 sm:gap-4 z-10 bottom-[120px] sm:bottom-[85px]"
           initial={{ opacity: 0 }}
-          animate={{
-            opacity: isTransitioning ? 0 : 1,
-          }}
+          animate={{ opacity: isTransitioning ? 0 : 1 }}
           transition={{ duration: 0.6 }}
         >
-          <span className="font-[Impact] text-[54px] text-white leading-none tracking-wider">
+          <motion.span
+            key={`number-${currentHero.id}`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="font-[Impact] text-[36px] sm:text-[54px] text-white leading-none tracking-wider"
+          >
             0{currentHero.id}
-          </span>
-          <span className="text-gray-400 text-[32px]">|</span>
-          <div className="flex flex-col gap-3">
+          </motion.span>
+          <span className="text-gray-400 text-[20px] sm:text-[32px]">|</span>
+          <div className="flex flex-col gap-2 sm:gap-3">
             {heroData.map((_, index) => (
               <motion.div
                 key={index}
-                className={`w-3 h-3 rounded-full ${
+                className={`rounded-full cursor-pointer ${
                   index === current ? "bg-[#F81A27]" : "bg-gray-500"
-                }`}
+                } w-[8px] h-[8px] sm:w-3 sm:h-3`}
                 animate={{
                   scale: index === current ? 1.3 : 1,
                   opacity: index === current ? 1 : 0.6,
                 }}
-                transition={{ duration: 0.3 }}
+                whileHover={{ scale: 1.5, opacity: 1 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                onClick={() => {
+                  if (index !== current) {
+                    setDirection(index > current ? 1 : -1);
+                    setCurrent(index);
+                    resetInterval();
+                  }
+                }}
               ></motion.div>
             ))}
           </div>

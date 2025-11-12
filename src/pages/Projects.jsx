@@ -1,6 +1,16 @@
 import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { ExternalLink, Code, Smartphone, Palette, Layers } from "lucide-react";
 import Footer from "../components/Footer";
+
+// Animation Variants for smoother content fade-in
+const contentVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+};
+
+// Panel transition duration
+const transition = { duration: 0.75, ease: "easeInOut" };
 
 export default function Projects() {
   const [expandedSection1, setExpandedSection1] = useState("none");
@@ -14,37 +24,258 @@ export default function Projects() {
     }
   };
 
+  // Project Data (Kept as is)
+  const webProjects = [
+    {
+      name: "E-Commerce Platform",
+      tech: "React, Node.js, MongoDB",
+      description: "Full-featured online shopping experience with real-time inventory",
+    },
+    {
+      name: "SaaS Dashboard",
+      tech: "Next.js, TypeScript, PostgreSQL",
+      description: "Analytics dashboard with advanced data visualization",
+    },
+    {
+      name: "Corporate Website",
+      tech: "React, Tailwind CSS, Strapi",
+      description: "Modern corporate site with CMS integration",
+    },
+  ];
+
+  const appProjects = [
+    {
+      name: "Fitness Tracker App",
+      tech: "React Native, Firebase",
+      description: "Cross-platform fitness tracking with social features",
+    },
+    {
+      name: "Food Delivery App",
+      tech: "Flutter, Node.js, Redis",
+      description: "Real-time order tracking and delivery management",
+    },
+    {
+      name: "Banking App",
+      tech: "React Native, AWS, GraphQL",
+      description: "Secure mobile banking with biometric authentication",
+    },
+  ];
+
+  const designProjects = [
+    {
+      name: "Brand Identity System",
+      tools: "Figma, Adobe Illustrator",
+      description: "Complete brand guidelines and visual identity",
+    },
+    {
+      name: "Mobile App UI Kit",
+      tools: "Figma, Sketch",
+      description: "Reusable component library for iOS and Android",
+    },
+    {
+      name: "Dashboard Interface",
+      tools: "Figma, Adobe XD",
+      description: "Data-rich analytics interface with dark mode",
+    },
+  ];
+
+  const softwareProjects = [
+    {
+      name: "Inventory Management System",
+      tech: "Python, Django, PostgreSQL",
+      description: "Enterprise inventory tracking and reporting system",
+    },
+    {
+      name: "CRM Platform",
+      tech: "React, Express, MongoDB",
+      description: "Customer relationship management with automation",
+    },
+    {
+      name: "HR Management Suite",
+      tech: "Vue.js, Laravel, MySQL",
+      description: "Complete HR solution for employee management",
+    },
+  ];
+
+  // Helper function for dynamic panel motion properties
+  const getPanelMotionProps = (expandedSide, currentSide) => {
+    const isExpanded = expandedSide === currentSide;
+    const isCollapsed = expandedSide !== 'none' && !isExpanded;
+
+    return {
+      // **Smoother Animation:** Using layout to handle size changes automatically
+      layout: true, 
+      initial: false,
+      animate: {
+        // Use flexGrow for clean distribution of remaining space
+        flexGrow: isExpanded ? 100 : isCollapsed ? 0 : 1, // 100 ensures full expansion
+        // Width will be handled by flexGrow, but setting a base width helps for a starting point
+        width: isExpanded ? "100%" : isCollapsed ? "0%" : "50%",
+        // Height for side-by-side.
+        height: "100vh", 
+      },
+      transition: transition,
+      className: `
+        ${currentSide === 'left' ? 'bg-[#0a0a0a] text-white z-10' : 'bg-white text-black z-0'} 
+        relative overflow-hidden 
+        min-h-[100vh] sm:min-h-screen 
+        w-full 
+        flex flex-col 
+      `,
+    };
+  };
+
+  // Helper component for collapsible content
+  const CollapsibleContent = ({ isExpanded, children }) => (
+    <motion.div
+      initial={false}
+      animate={{ 
+        opacity: isExpanded ? 1 : 0, 
+        y: isExpanded ? 0 : 20 
+      }}
+      transition={{ duration: 0.3, delay: isExpanded ? 0.3 : 0 }}
+      // Added text-center here to ensure all nested text elements without explicit alignment inherit center
+      className={`w-full h-full ${isExpanded ? 'pointer-events-auto' : 'pointer-events-none'} overflow-y-auto text-center`}
+    >
+      <AnimatePresence>
+        {isExpanded && (
+          <motion.div
+            variants={contentVariants}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+          >
+            {children}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+    
+  // --- Component for the panel content (to ensure consistent alignment) ---
+  const PanelContent = ({ expanded, icon, title, subtitle, projects, isDark, side }) => (
+    // This wrapper is key: it centers the entire block (icon, title, text, grid) within the panel
+    <div className="flex flex-col items-center justify-center p-8 md:p-20 lg:p-32 h-full w-full text-center">
+      {expanded ? (
+        <CollapsibleContent isExpanded={expanded}>
+          {React.cloneElement(icon, { 
+            className: `w-12 h-12 md:w-16 md:h-16 text-[#F81A27] mx-auto mb-4 md:mb-6` 
+          })}
+          <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-10">{title}</h2>
+          <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-xs md:text-lg mb-8 max-w-2xl mx-auto`}>
+            {subtitle}
+          </p>
+
+          {/* Added mx-auto to center the grid container */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 w-full max-w-5xl  mx-auto">
+            {projects.map((project, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 + index * 0.1 }}
+                className={`${isDark ? 'bg-[#1a1a1a] border-[#2E2A29]' : 'bg-white border-gray-300'} border rounded-xl p-4 md:p-6 hover:border-[#F81A27]/60 transition-all text-left ${isDark ? '' : 'hover:shadow-xl'}`}
+              >
+                <h3 className={`text-base md:text-xl font-bold ${isDark ? 'text-white' : 'text-black'} mb-1`}>
+                  {project.name}
+                </h3>
+                <p className="text-[#F81A27] text-xs mb-2 font-medium">
+                  {project.tech || project.tools}
+                </p>
+                <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-xs md:text-sm mb-3`}>
+                  {project.description}
+                </p>
+                <button className={`flex items-center ${isDark ? 'text-white hover:text-[#F81A27]' : 'text-black hover:text-[#F81A27] font-semibold'} transition-colors text-xs md:text-sm`}>
+                  View Project <ExternalLink className="ml-2" size={14} />
+                </button>
+              </motion.div>
+            ))}
+          </div>
+        </CollapsibleContent>
+      ) : (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex flex-col items-center text-center justify-center h-full"
+          layout
+        >
+          {React.cloneElement(icon, { 
+            className: `w-16 h-16 md:w-20 md:h-20 text-[#F81A27] mb-4 md:mb-6` 
+          })}
+          <h2 className="text-3xl md:text-4xl lg:text-6xl font-bold">
+            {title.toUpperCase()}
+          </h2>
+          <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} mt-2 text-xs md:text-base`}>
+            Click to explore our {title.split(' ')[0].toLowerCase()} projects
+          </p>
+        </motion.div>
+      )}
+    </div>
+  );
+
+  // --- Button Component for clean repetition ---
+  const ExpandButton = ({ section, side, Icon, isLeft, isExpanded }) => {
+    const isWhite = isLeft; // Left panel has the white button
+    const bgColor = isWhite ? 'bg-white text-black' : 'bg-black text-white';
+    const hoverColor = isWhite ? 'hover:bg-gray-300' : 'hover:bg-gray-700';
+    
+    // Positioning logic:
+    const positionClasses = isLeft 
+      ? 'right-0 top-0 h-full w-48 justify-end' // Fixed for left panel's button on the right
+      : 'left-0 top-0 h-full w-48 justify-start'; // Fixed for right panel's button on the left
+
+    return (
+      <div className={`absolute flex items-center ${positionClasses} z-20`}>
+        <div
+          onClick={() => toggleSection(section, side)}
+          className={`
+            w-12 h-12 md:w-[120px] md:h-[150px]
+            flex items-center justify-center 
+            cursor-pointer transition duration-500 
+            ${bgColor} ${hoverColor} font-semibold shadow-lg 
+            ${isLeft ? 'rounded-tl-lg md:rounded-tl-none rounded-bl-lg md:rounded-bl-none' : 'rounded-tr-lg md:rounded-tr-none rounded-br-lg md:rounded-br-none'}
+            
+            // Mobile adjustments: make buttons small squares on the top corner
+            absolute ${isLeft ? 'top-0 right-0' : 'top-0 left-0'} w-16 h-16 md:relative md:w-[120px] md:h-48
+          `}
+        >
+          {React.cloneElement(Icon, { className: "mr-0 md:mr-2", size: 20 })}
+          <span className="hidden md:inline">{isExpanded ? "Close" : "View"}</span>
+        </div>
+      </div>
+    );
+  };
+
+
   return (
-    <div className="flex flex-col w-full">
-      {/* ===== TOP CONTENT SECTION ===== */}
-      <section className="min-h-[60vh] flex flex-col items-center justify-center text-center px-6 md:px-20 bg-gradient-to-b from-gray-50 to-white">
+    <div className="flex flex-col w-full bg-[#1B1716]">
+      {/* ===== TOP CONTENT SECTION (Kept text-center) ===== */}
+      <section className="min-h-[60vh] flex flex-col items-center justify-center text-center px-6 md:px-20 pt-32 pb-16 bg-gradient-to-b from-[#0a0a0a]/30 to-transparent">
         <motion.h1
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-5xl md:text-6xl font-bold text-black mb-6"
+          className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6"
         >
-          Our <span className="text-blue-600">Projects</span>
+          Our <span className="text-[#F81A27]">Projects</span>
         </motion.h1>
 
         <motion.p
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.8 }}
-          className="text-gray-600 text-lg md:text-xl max-w-3xl leading-relaxed"
+          className="text-gray-300 text-sm md:text-lg lg:text-xl max-w-3xl leading-relaxed mb-4"
         >
-          At <span className="font-semibold text-black">Blitz Innovation</span>,
+          At <span className="font-semibold text-white">Blitz Innovation</span>,
           we craft digital experiences that combine creativity, functionality,
-          and performance. From responsive web platforms to high-performing
-          mobile apps, each project reflects our commitment to innovation and
-          excellence.
+          and performance.
         </motion.p>
 
         <motion.p
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.8 }}
-          className="text-gray-500 text-base md:text-lg mt-4 max-w-2xl"
+          className="text-gray-400 text-xs md:text-base lg:text-lg max-w-2xl"
         >
           Explore some of our featured works that showcase our passion for
           design, development, and seamless user experience.
@@ -52,117 +283,112 @@ export default function Projects() {
       </section>
 
       {/* ===== FIRST PROJECT SECTION ===== */}
-      <div className="flex h-screen relative overflow-hidden">
-        {/* LEFT PANEL */}
+      <div className="flex flex-row h-[100vh] relative overflow-hidden"> 
+        {/* LEFT PANEL - WEB DEVELOPMENT */}
         <motion.div
-          animate={{
-            width:
-              expandedSection1 === "left"
-                ? "100%"
-                : expandedSection1 === "right"
-                ? "0%"
-                : "50%",
+          {...getPanelMotionProps(expandedSection1, "left")}
+          style={{
+            backgroundImage: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%)',
           }}
-          transition={{ duration: 1, ease: "easeInOut" }}
-          className="bg-black text-white text-center relative overflow-hidden z-10"
         >
-          <div className="absolute flex items-center h-full right-0 w-48">
-            <div
-              onClick={() => toggleSection(1, "left")}
-              className="w-full h-48 flex items-center justify-center cursor-pointer transition duration-500 hover:bg-gray-300 bg-white text-black"
-            >
-              links
-            </div>
-          </div>
-          <div className="flex items-center justify-center p-48 h-full">
-            WEB DEVELOPMENT
-          </div>
+          <ExpandButton 
+            section={1} 
+            side="left" 
+            Icon={<Code />} 
+            isLeft={true} 
+            isExpanded={expandedSection1 === "left"}
+          />
+          <PanelContent 
+            expanded={expandedSection1 === "left"}
+            icon={<Code />}
+            title="Web Development"
+            subtitle="Building responsive, scalable, and high-performance web applications that deliver exceptional user experiences."
+            projects={webProjects}
+            isDark={true}
+            side="left"
+          />
         </motion.div>
 
-        {/* RIGHT PANEL */}
+        {/* RIGHT PANEL - APP DEVELOPMENT */}
         <motion.div
-          animate={{
-            width:
-              expandedSection1 === "right"
-                ? "100%"
-                : expandedSection1 === "left"
-                ? "0%"
-                : "50%",
+          {...getPanelMotionProps(expandedSection1, "right")}
+          style={{
+            backgroundImage: 'linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%)',
           }}
-          transition={{ duration: 1, ease: "easeInOut" }}
-          className="bg-white text-black text-center relative overflow-hidden z-0"
         >
-          <div className="absolute flex items-center h-full left-0 w-48">
-            <div
-              onClick={() => toggleSection(1, "right")}
-              className="w-full h-48 flex items-center justify-center cursor-pointer transition duration-500 hover:bg-gray-700 bg-black text-white"
-            >
-              rechts
-            </div>
-          </div>
-          <div className="flex items-center justify-center p-48 h-full">
-            APP DEVELOPMENT
-          </div>
+          <ExpandButton 
+            section={1} 
+            side="right" 
+            Icon={<Smartphone />} 
+            isLeft={false} 
+            isExpanded={expandedSection1 === "right"}
+          />
+          <PanelContent 
+            expanded={expandedSection1 === "right"}
+            icon={<Smartphone />}
+            title="App Development"
+            subtitle="Creating native and cross-platform mobile applications with seamless performance and intuitive interfaces."
+            projects={appProjects}
+            isDark={false}
+            side="right"
+          />
         </motion.div>
       </div>
 
       {/* ===== SECOND PROJECT SECTION ===== */}
-      <div className="flex h-screen relative overflow-hidden">
-        {/* LEFT PANEL */}
+      <div className="flex flex-row h-[100vh] relative overflow-hidden">
+        {/* LEFT PANEL - UI/UX DESIGN */}
         <motion.div
-          animate={{
-            width:
-              expandedSection2 === "left"
-                ? "100%"
-                : expandedSection2 === "right"
-                ? "0%"
-                : "50%",
+          {...getPanelMotionProps(expandedSection2, "left")}
+          style={{
+            backgroundImage: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%)',
           }}
-          transition={{ duration: 1, ease: "easeInOut" }}
-          className="bg-black text-white text-center relative overflow-hidden z-10"
         >
-          <div className="absolute flex items-center h-full right-0 w-48">
-            <div
-              onClick={() => toggleSection(2, "left")}
-              className="w-full h-48 flex items-center justify-center cursor-pointer transition duration-500 hover:bg-gray-300 bg-white text-black"
-            >
-              links
-            </div>
-          </div>
-          <div className="flex items-center justify-center p-48 h-full">
-            UI / UX DESIGN
-          </div>
+          <ExpandButton 
+            section={2} 
+            side="left" 
+            Icon={<Palette />} 
+            isLeft={true} 
+            isExpanded={expandedSection2 === "left"}
+          />
+          <PanelContent 
+            expanded={expandedSection2 === "left"}
+            icon={<Palette />}
+            title="UI / UX Design"
+            subtitle="Designing beautiful, intuitive interfaces that prioritize user experience and brand identity."
+            projects={designProjects}
+            isDark={true}
+            side="left"
+          />
         </motion.div>
 
-        {/* RIGHT PANEL */}
+        {/* RIGHT PANEL - CUSTOM SOFTWARE */}
         <motion.div
-          animate={{
-            width:
-              expandedSection2 === "right"
-                ? "100%"
-                : expandedSection2 === "left"
-                ? "0%"
-                : "50%",
+          {...getPanelMotionProps(expandedSection2, "right")}
+          style={{
+            backgroundImage: 'linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%)',
           }}
-          transition={{ duration: 1, ease: "easeInOut" }}
-          className="bg-white text-black text-center relative overflow-hidden z-0"
         >
-          <div className="absolute flex items-center h-full left-0 w-48">
-            <div
-              onClick={() => toggleSection(2, "right")}
-              className="w-full h-48 flex items-center justify-center cursor-pointer transition duration-500 hover:bg-gray-700 bg-black text-white"
-            >
-              rechts
-            </div>
-          </div>
-          <div className="flex items-center justify-center p-48 h-full">
-            CUSTOM SOFTWARE DEVELOPMENT
-          </div>
+          <ExpandButton 
+            section={2} 
+            side="right" 
+            Icon={<Layers />} 
+            isLeft={false} 
+            isExpanded={expandedSection2 === "right"}
+          />
+          <PanelContent 
+            expanded={expandedSection2 === "right"}
+            icon={<Layers />}
+            title="Custom Software Development"
+            subtitle="Tailored software solutions designed to meet your unique business needs and drive operational efficiency."
+            projects={softwareProjects}
+            isDark={false}
+            side="right"
+          />
         </motion.div>
       </div>
-      < Footer />
+
+      <Footer />
     </div>
-    
   );
-  
 }
