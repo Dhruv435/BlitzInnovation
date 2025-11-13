@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
 import Footer from "../components/Footer";
@@ -65,6 +65,11 @@ const FormInput = ({ label, type = "text", placeholder, isTextArea = false }) =>
 export default function ContactUs() {
   const [isSending, setIsSending] = useState(false);
 
+  // 💡 FIX: Scroll to the top when the component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []); // Empty dependency array ensures it runs only once on mount
+
   // Mock form submission logic
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -81,9 +86,6 @@ export default function ContactUs() {
   const mapZoom = "13";
   
   // Using Google Maps Embed API pattern for an interactive map iframe.
-  // Note: True dark mode requires a paid API key and specific styling in the URL, 
-  // which is not supported in simple output=embed. We rely on the dark UI design 
-  // to make the map area feel integrated.
   const mapUrl = `https://maps.google.com/maps?q=${mapCenter}&z=${mapZoom}&output=embed`;
 
   return (<>

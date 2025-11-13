@@ -1,6 +1,25 @@
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {Target,Eye,Award,Users,Briefcase,TrendingUp,CheckCircle,Globe,Lightbulb,Shield,ArrowUp,X,} from "lucide-react";
+// IMPORTANT CHANGE: Use location, since we are handling navigation and
+// transition internally via a prop passed from App.jsx
+import { useNavigate, useLocation } from "react-router-dom";
+import {
+  Target,
+  Eye,
+  Award,
+  Users,
+  Briefcase,
+  TrendingUp,
+  CheckCircle,
+  Globe,
+  Lightbulb,
+  Shield,
+  ArrowUp,
+  ArrowLeft,
+  ArrowRight,
+  X,
+} from "lucide-react";
+// Assuming Footer is available at this path
 import Footer from "../components/Footer";
 
 // --- ANIMATION VARIANTS ---
@@ -19,31 +38,35 @@ const staggerContainer = {
   },
 };
 
-// --- DATA ---
+// --- DATA (UPDATED WITH IMAGE URLS AND STYLES) ---
 const TEAM_DATA = [
   {
-    name: "John Smith",
+    name: "Keval Gadara",
     role: "Founder & CEO",
-    image: "👨‍💼",
-    description: "Visionary leader with 15+ years in tech innovation",
+    // Placeholder image link, replace with actual links later
+    imageUrl: "https://picsum.photos/seed/keval/200/200",
+    description: "Visionary leader and head strategist.",
   },
   {
-    name: "Sarah Johnson",
-    role: "Co-Founder & CTO",
-    image: "👩‍💻",
-    description: "Expert in scalable architecture and AI solutions",
+    name: "Prit Chadamiya",
+    role: "Director & CFO",
+    // Placeholder image link, replace with actual links later
+    imageUrl: "https://picsum.photos/seed/prit/200/200",
+    description: "Financial expert and corporate director.",
   },
   {
-    name: "Michael Chen",
-    role: "Head of Design",
-    image: "👨‍🎨",
-    description: "Award-winning UI/UX designer and creative director",
+    name: "Umang Zalariya",
+    role: "CTO",
+    // Placeholder image link, replace with actual links later
+    imageUrl: "https://picsum.photos/seed/umang/200/200",
+    description: "Chief Technology Officer and architect of innovation.",
   },
   {
-    name: "Emily Davis",
-    role: "Head of Operations",
-    image: "👩‍💼",
-    description: "Strategic operations expert ensuring excellence",
+    name: "Vruti Gadara",
+    role: "Web Developer/COO/CPO",
+    // Placeholder image link, replace with actual links later
+    imageUrl: "https://picsum.photos/seed/vruti/200/200",
+    description: "Full-stack developer, operations, and product head.",
   },
 ];
 
@@ -79,9 +102,195 @@ const VALUES_DATA = [
 
 // --- COMPONENTS ---
 
+const TeamSection = () => {
+  const sectionRef = useRef(null);
+  const sliderRef = useRef(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Constants for mobile slider
+  const numItems = TEAM_DATA.length;
+
+  const goToPrev = () => {
+    setCurrentIndex((prevIndex) => (prevIndex === 0 ? numItems - 1 : prevIndex - 1));
+  };
+
+  const goToNext = () => {
+    setCurrentIndex((prevIndex) => (prevIndex === numItems - 1 ? 0 : prevIndex + 1));
+  };
+
+  // Logic for scroll/drag snap (for touch-enabled devices on desktop/mobile)
+  // This helps in aligning the card when scrolling/dragging, especially on desktop if using touch/trackpad.
+  const handleScrollEnd = () => {
+    if (!sliderRef.current) return;
+
+    const scrollLeft = sliderRef.current.scrollLeft;
+    const cardWidth =
+      sliderRef.current.offsetWidth /
+      (window.innerWidth >= 1024 ? 4 : window.innerWidth >= 640 ? 2 : 1); // Approximate card width per view
+
+    // Calculate the closest index and snap to it
+    const closestIndex = Math.round(scrollLeft / cardWidth);
+    setCurrentIndex(closestIndex);
+
+    // Optional: Smoothly scroll to the snapped position
+    // sliderRef.current.scrollTo({
+    //    left: closestIndex * cardWidth,
+    //    behavior: 'smooth'
+    // });
+  };
+
+  // Effect to scroll to the current index for mobile view on button click
+  React.useEffect(() => {
+    if (sliderRef.current && window.innerWidth < 1024) {
+      // Find the first child's width (assuming all cards have the same width)
+      const firstChild = sliderRef.current.children[0];
+      if (firstChild) {
+        const cardWidth = firstChild.offsetWidth; // Get actual card width
+        // Calculate the scroll position based on the current index and card width
+        const scrollPosition = currentIndex * cardWidth;
+
+        sliderRef.current.scrollTo({
+          left: scrollPosition,
+          behavior: 'smooth',
+        });
+      }
+    }
+  }, [currentIndex]);
+
+  return (
+    <motion.section
+      ref={sectionRef}
+      id="team"
+      className="px-4 sm:px-8 lg:px-20 py-16 sm:py-20 lg:py-24"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      variants={staggerContainer}
+    >
+      <div className="max-w-7xl mx-auto">
+        <motion.div variants={fadeUp} className="text-center mb-12 sm:mb-16">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
+            Meet Our Leadership
+          </h2>
+          <div className="w-20 h-1 bg-gradient-to-r from-transparent via-[#F81A27] to-transparent mx-auto mb-6"></div>
+          <p className="text-base sm:text-lg text-gray-400 max-w-2xl mx-auto">
+            The visionaries driving Blitz Innovation forward
+          </p>
+        </motion.div>
+        {/* --- DESKTOP VIEW (lg and up) --- */}
+        <motion.div
+          variants={staggerContainer}
+          className="hidden lg:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8"
+        >
+          {TEAM_DATA.map((member, index) => (
+            <motion.div
+              key={index}
+              variants={fadeUp}
+              className="bg-[#221E1D] border border-[#2E2A29] rounded-xl p-6 hover:border-[#F81A27]/40 transition-all text-center group relative overflow-hidden shadow-lg"
+              whileHover={{ scale: 1.05, y: -10 }}
+            >
+              {/* Decorative accent */}
+              <div className="absolute top-0 left-0 w-2 h-full bg-[#F81A27]/50 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500"></div>
+
+              {/* IMAGE AREA - Updated to use image URL with circular frame and red border */}
+              <div className="flex justify-center mb-6">
+                <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-[#F81A27] overflow-hidden group-hover:scale-110 transition-transform duration-300 relative z-10">
+                  <img
+                    src={member.imageUrl}
+                    alt={member.name}
+                    className="w-full h-full object-cover"
+                    // Added Image Tag to describe the visual
+                    onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/200?text=Image+Error" }}
+                  />
+
+                </div>
+              </div>
+
+              <h3 className="text-lg sm:text-xl font-bold text-white mb-2 relative z-10">
+                {member.name}
+              </h3>
+              <p className="text-[#F81A27] font-medium mb-3 text-sm sm:text-base relative z-10">
+                {member.role}
+              </p>
+              <p className="text-xs sm:text-sm text-gray-400 relative z-10">{member.description}</p>
+            </motion.div>
+          ))}
+        </motion.div>
+        {/* --- MOBILE/TABLET SLIDER VIEW (below lg) --- */}
+        <div className="lg:hidden">
+          {/* Slider Container - Hidden scrollbar, overflow-x-auto, snap-x */}
+          <motion.div
+            ref={sliderRef}
+            variants={staggerContainer}
+            className="flex overflow-x-scroll snap-x snap-mandatory pb-4 space-x-6 sm:space-x-8 scrollbar-hide"
+            // The scrollbar-hide class needs to be defined in your global CSS
+            style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none' }}
+            // onScroll={handleScrollEnd} // Optional: for detecting drag snap
+          >
+            {TEAM_DATA.map((member, index) => (
+              <motion.div
+                key={index}
+                variants={fadeUp}
+                className="flex-shrink-0 w-[85vw] sm:w-[calc(50vw-24px)] md:w-[calc(33.33vw-24px)] bg-[#221E1D] border border-[#2E2A29] rounded-xl p-6 text-center snap-center"
+                style={{
+                  // Adjust margin for the first and last item to center them better
+                  marginLeft: index === 0 ? 'auto' : undefined,
+                  marginRight: index === numItems - 1 ? 'auto' : undefined,
+                }}
+              >
+                {/* IMAGE AREA - Updated to use image URL with circular frame and red border */}
+                <div className="flex justify-center mb-6">
+                  <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-[#F81A27] overflow-hidden relative z-10">
+                    <img
+                      src={member.imageUrl}
+                      alt={member.name}
+                      className="w-full h-full object-cover"
+                      // Added Image Tag to describe the visual
+                      onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/200?text=Image+Error" }}
+                    />
+                  </div>
+                </div>
+
+                <h3 className="text-lg sm:text-xl font-bold text-white mb-2">
+                  {member.name}
+                </h3>
+                <p className="text-[#F81A27] font-medium mb-3 text-sm sm:text-base">
+                  {member.role}
+                </p>
+                <p className="text-xs sm:text-sm text-gray-400">{member.description}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+          {/* Custom Navigation Buttons (below container) */}
+          <div className="flex justify-center mt-8 space-x-3">
+            <motion.button
+              onClick={goToPrev}
+              className="w-12 h-12 bg-[#F81A27] text-white flex items-center justify-center transition-colors duration-200 rounded-full"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              aria-label="Previous Team Member"
+            >
+              <ArrowLeft size={20} />
+            </motion.button>
+
+            <motion.button
+              onClick={goToNext}
+              className="w-12 h-12 bg-[#F81A27] text-white flex items-center justify-center transition-colors duration-200 rounded-full"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              aria-label="Next Team Member"
+            >
+              <ArrowRight size={20} />
+            </motion.button>
+          </div>
+        </div>
+      </div>
+    </motion.section>
+  );
+};
+
 const HeroSection = () => {
   const sectionRef = useRef(null);
-
   return (
     <motion.section
       ref={sectionRef}
@@ -121,7 +330,6 @@ const HeroSection = () => {
             Our team of passionate professionals works tirelessly to create value for our clients, partners, and community — ensuring every project we undertake reflects our commitment to quality and progress.
           </p>
         </motion.div>
-
         {/* Stats Grid */}
         <motion.div
           variants={staggerContainer}
@@ -152,7 +360,6 @@ const HeroSection = () => {
 
 const MissionVisionSection = () => {
   const sectionRef = useRef(null);
-
   return (
     <motion.section
       ref={sectionRef}
@@ -179,7 +386,6 @@ const MissionVisionSection = () => {
             Our mission is to <span className="text-white font-semibold">empower growth through innovation and reliability</span>. We strive to provide top-quality products and services that enhance experiences, simplify complexities, and inspire trust. By integrating modern technology and customer-centric strategies, Blitz aims to become a trusted name known for delivering excellence in every aspect of our work.
           </p>
         </motion.div>
-
         {/* Vision */}
         <motion.div
           variants={fadeUp}
@@ -202,7 +408,6 @@ const MissionVisionSection = () => {
 
 const ValuesSection = () => {
   const sectionRef = useRef(null);
-
   return (
     <motion.section
       ref={sectionRef}
@@ -253,7 +458,6 @@ const ValuesSection = () => {
 
 const AchievementsSection = () => {
   const sectionRef = useRef(null);
-
   const achievements = [
     "Successfully served 1000+ satisfied clients across various industries",
     "Expanded our presence across 25+ regions, growing into a trusted global brand",
@@ -261,7 +465,6 @@ const AchievementsSection = () => {
     "Built long-term partnerships based on trust, transparency, and performance",
     "Developed a strong culture of continuous improvement and professional growth",
   ];
-
   return (
     <motion.section
       ref={sectionRef}
@@ -303,61 +506,14 @@ const AchievementsSection = () => {
   );
 };
 
-const TeamSection = () => {
+// MODIFIED: Accepts onNavigate prop
+const CTASection = ({ onNavigate }) => {
   const sectionRef = useRef(null);
 
-  return ( 
-    <motion.section
-      ref={sectionRef}
-      id="team"
-      className="px-4 sm:px-8 lg:px-20 py-16 sm:py-20 lg:py-24"
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.2 }}
-      variants={staggerContainer}
-    >
-      <div className="max-w-7xl mx-auto">
-        <motion.div variants={fadeUp} className="text-center mb-12 sm:mb-16">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
-            Meet Our Leadership
-          </h2>
-          <div className="w-20 h-1 bg-gradient-to-r from-transparent via-[#F81A27] to-transparent mx-auto mb-6"></div>
-          <p className="text-base sm:text-lg text-gray-400 max-w-2xl mx-auto">
-            The visionaries driving Blitz Innovation forward
-          </p>
-        </motion.div>
-
-        <motion.div
-          variants={staggerContainer}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8"
-        >
-          {TEAM_DATA.map((member, index) => (
-            <motion.div
-              key={index}
-              variants={fadeUp}
-              className="bg-[#221E1D] border border-[#2E2A29] rounded-xl p-6 hover:border-[#F81A27]/40 transition-all text-center group"
-              whileHover={{ scale: 1.05, y: -10 }}
-            >
-              <div className="text-6xl sm:text-7xl mb-4 group-hover:scale-110 transition-transform">
-                {member.image}
-              </div>
-              <h3 className="text-lg sm:text-xl font-bold text-white mb-2">
-                {member.name}
-              </h3>
-              <p className="text-[#F81A27] font-medium mb-3 text-sm sm:text-base">
-                {member.role}
-              </p>
-              <p className="text-xs sm:text-sm text-gray-400">{member.description}</p>
-            </motion.div>
-          ))}
-        </motion.div>
-      </div>
-    </motion.section>
-  );
-};
-
-const CTASection = () => {
-  const sectionRef = useRef(null);
+  const handleNavigation = () => {
+    // Use the onNavigate function passed from App.jsx to trigger the transition and route change
+    onNavigate("/contact");
+  };
 
   return (
     <motion.section
@@ -384,24 +540,25 @@ const CTASection = () => {
           </p>
 
           <motion.button
-            className="px-8 sm:px-10 py-3 sm:py-4 bg-[#F81A27] hover:bg-[#C70008] text-white font-semibold rounded-lg transition-all duration-300 shadow-lg shadow-[#F81A27]/20 text-sm sm:text-base"
-            onClick={() => (window.location.href = "/contact")}
-            whileHover={{ scale: 1.05 }}
+            className="px-8 sm:px-10 py-3 sm:py-4 bg-[#F81A27] text-white font-semibold rounded-lg transition-all duration-300 shadow-lg shadow-[#F81A27]/20 text-sm sm:text-base"
+            whileHover={{ scale: 1.05, backgroundColor: "#C70008" }}
             whileTap={{ scale: 0.95 }}
+            onClick={handleNavigation} // Call the navigate function
           >
             Get in Touch →
           </motion.button>
+
+
         </div>
       </div>
     </motion.section>
   );
 };
 
-// Mobile Quick Navigation
-const MobileQuickNav = () => {
+// MODIFIED: Accepts onNavigate prop
+const MobileQuickNav = ({ onNavigate }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
-
   const sections = [
     { id: "hero", label: "About Us" },
     { id: "mission", label: "Mission & Vision" },
@@ -412,6 +569,13 @@ const MobileQuickNav = () => {
   ];
 
   const scrollToSection = (id) => {
+    if (id === "cta") {
+      // Use the passed onNavigate prop to trigger the transition and route change
+      onNavigate("/contact");
+      setIsOpen(false);
+      return;
+    }
+
     const element = document.getElementById(id);
     if (element) {
       const offsetTop = element.offsetTop - 70;
@@ -446,7 +610,6 @@ const MobileQuickNav = () => {
       >
         Quick Menu
       </motion.button>
-
       {/* Scroll to Top Button */}
       <AnimatePresence>
         {showScrollTop && (
@@ -462,7 +625,6 @@ const MobileQuickNav = () => {
           </motion.button>
         )}
       </AnimatePresence>
-
       {/* Menu Overlay */}
       <AnimatePresence>
         {isOpen && (
@@ -512,24 +674,37 @@ const MobileQuickNav = () => {
   );
 };
 
-// Main Component
-export default function About() {
-  return ( <>
-    <motion.div
-      className="relative w-full min-h-screen bg-[#1B1716] text-white overflow-hidden"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.8 }}
-    >
-      <HeroSection />
-      <MissionVisionSection />
-      <ValuesSection />
-      <AchievementsSection />
-      <TeamSection />
-      <CTASection />
-      <MobileQuickNav />
-    </motion.div>
-    <Footer />
+// Main Component (UPDATED TO RECEIVE onNavigate PROP)
+export default function About({ onNavigate, isTransitioning }) {
+  // Use isTransitioning to conditionally hide/show content if needed, though
+  // the transition overlay handles most of the UX.
+
+  // The fade-in animation logic is adjusted to respect the global transition
+  // if you want to skip the internal page fade-in when the global transition is active.
+
+  const initialOpacity = isTransitioning ? 1 : 0;
+  const animateOpacity = 1;
+  const transitionDuration = isTransitioning ? 0 : 0.8;
+
+  return (
+    <>
+      <motion.div
+        className="relative w-full min-h-screen bg-[#1B1716] text-white overflow-hidden"
+        initial={{ opacity: initialOpacity }}
+        animate={{ opacity: animateOpacity }}
+        transition={{ duration: transitionDuration }}
+      >
+        <HeroSection />
+        <MissionVisionSection />
+        <ValuesSection />
+        <AchievementsSection />
+        <TeamSection />
+        {/* Pass onNavigate to CTASection */}
+        <CTASection onNavigate={onNavigate} />
+        {/* Pass onNavigate to MobileQuickNav */}
+        <MobileQuickNav onNavigate={onNavigate} />
+      </motion.div>
+      <Footer />
     </>
   );
 }
