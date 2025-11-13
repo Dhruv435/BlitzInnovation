@@ -19,12 +19,12 @@ const AnimatedButton = ({ text, onClick }) => {
         className="absolute inset-0 z-10 bg-[#37474f] transition-transform duration-500"
         variants={{
           rest: {
-            backgroundColor: '#37474f',
-            transform: 'translateX(-100%) translateY(-100%)',
+            backgroundColor: "#37474f",
+            transform: "translateX(-100%) translateY(-100%)",
           },
           hover: {
-            backgroundColor: 'white',
-            transform: 'translateX(0%) translateY(0%)',
+            backgroundColor: "white",
+            transform: "translateX(0%) translateY(0%)",
           },
         }}
         transition={{ type: "tween", duration: 0.5, ease: [0.2, 1, 0.3, 1] }}
@@ -36,76 +36,80 @@ const AnimatedButton = ({ text, onClick }) => {
 // Custom Service Card Component incorporating the design
 const ServiceCardDesign = ({ title, desc, index, activeCard, setActiveCard }) => {
   const isExpanded = activeCard === index;
-  const colors = ["#3953a4", "#6abd45", "#ed2024", "#FF5733", "#33FF57", "#5733FF"]; 
+  const colors = ["#3953a4", "#6abd45", "#ed2024", "#FF5733", "#33FF57", "#5733FF"];
   const color = colors[index % colors.length];
 
   const toggleExpand = () => {
     setActiveCard(isExpanded ? null : index);
   };
 
+  // Highlight specific words in red
+  const highlightTitle = (text) => {
+    return text
+      .replace(/Workflow/gi, '<span class="text-red-500">Workflow</span>')
+      .replace(/Custom Software/gi, '<span class="text-red-500">Custom Software</span>')
+      .replace(/Web Application/gi, '<span class="text-red-500">Web Application</span>')
+      .replace(/UI\/UX/gi, '<span class="text-red-500">UI/UX</span>')
+      .replace(/Hire Dedicated/gi, '<span class="text-red-500">Hire Dedicated</span>')
+      .replace(/\bIT\b/gi, '<span class="text-red-500">IT</span>');
+  };
+
   return (
     <motion.div
-      // Use 'layout' for a much smoother, coordinated transition of the container's size
-      layout 
+      layout
       className="relative flex flex-col justify-center items-center w-full mx-auto overflow-hidden bg-black text-white transition-all duration-1000 ease-in-out"
-      // Adjusted height for better mobile viewing: 400px default, 650px expanded (to accommodate stacked content)
-      animate={{ height: isExpanded ? 650 : 400 }} 
+      animate={{ height: isExpanded ? 650 : 400 }}
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       transition={{ duration: 0.8, delay: index * 0.1 }}
       viewport={{ once: true, amount: 0.3 }}
     >
-      {/* --- Geometric/Shape Background Area (Smoother Animation) --- */}
       <div className="absolute inset-0 flex items-center justify-center">
-        <motion.div 
-            className="absolute w-[600px] h-[600px] opacity-10 blur-xl"
-            animate={{ 
-                scale: isExpanded ? 0.8 : 1.2, 
-                rotate: isExpanded ? 30 : 0,
-                backgroundColor: isExpanded ? color : "#212121" // Added color change
-            }}
-            // Use spring transition for a smoother, bouncier feel
-            transition={{ type: "spring", stiffness: 50, damping: 10, duration: 1 }} 
-            style={{ 
-                backgroundColor: color, 
-                borderRadius: '50% 30% 70% 40% / 60% 40% 60% 40%' 
-            }}
+        <motion.div
+          className="absolute w-[600px] h-[600px] opacity-10 blur-xl"
+          animate={{
+            scale: isExpanded ? 0.8 : 1.2,
+            rotate: isExpanded ? 30 : 0,
+            backgroundColor: isExpanded ? color : "#212121",
+          }}
+          transition={{ type: "spring", stiffness: 50, damping: 10, duration: 1 }}
+          style={{
+            backgroundColor: color,
+            borderRadius: "50% 30% 70% 40% / 60% 40% 60% 40%",
+          }}
         />
       </div>
 
-      {/* --- Content Area (Added Mobile Padding) --- */}
-      <motion.div 
-        layout="position" // Ensure content moves smoothly within the resizing container
-        className="relative z-10 w-full max-w-4xl flex flex-col md:flex-row items-center justify-between px-4 sm:px-6 py-8" // Added responsive padding
-        // Reduced vertical shift on expansion
-        animate={{ y: isExpanded ? -20 : 0 }} 
+      <motion.div
+        layout="position"
+        className="relative z-10 w-full max-w-4xl flex flex-col md:flex-row items-center justify-between px-4 sm:px-6 py-8"
+        animate={{ y: isExpanded ? -20 : 0 }}
         transition={{ duration: 0.5 }}
       >
         {/* Left Side: Title and Description */}
         <div className="md:w-1/2 text-left mb-6 md:mb-0">
-          <motion.h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 font-poppins">
-            {title}
-          </motion.h1>
-          
+          <motion.h1
+            className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 font-poppins"
+            dangerouslySetInnerHTML={{ __html: highlightTitle(title) }}
+          ></motion.h1>
+
           <AnimatePresence mode="wait">
             {isExpanded ? (
-              // Expanded detailed content
               <motion.p
                 key="detail-desc"
                 initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
+                animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.5 }}
                 className="text-white text-md sm:text-lg max-w-lg font-light leading-relaxed font-poppins pt-4"
               >
-                **Detailed Information for {title}:** {desc} This service includes extensive consultation, deployment, and post-launch support tailored to modern business requirements. We guarantee 99.9% uptime and dedicated senior developer allocation.
+                <strong>Detailed Information for {title}:</strong> {desc} This service includes extensive consultation, deployment, and post-launch support tailored to modern business requirements. We guarantee 99.9% uptime and dedicated senior developer allocation.
               </motion.p>
             ) : (
-              // Collapsed short description
-              <motion.p 
+              <motion.p
                 key="short-desc"
                 initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
+                animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.5 }}
                 className="text-gray-400 text-md sm:text-lg max-w-sm font-light leading-relaxed font-poppins"
@@ -115,9 +119,9 @@ const ServiceCardDesign = ({ title, desc, index, activeCard, setActiveCard }) =>
             )}
           </AnimatePresence>
         </div>
-        
-        {/* Right side for the button / call-to-action (Fixed Alignment for Mobile) */}
-        <div className="md:w-1/2 flex flex-col items-start md:items-end text-left md:text-right w-full"> 
+
+        {/* Right Side: Buttons */}
+        <div className="md:w-1/2 flex flex-col items-start md:items-end text-left md:text-right w-full">
           <AnimatePresence mode="wait">
             {!isExpanded && (
               <motion.div
@@ -127,10 +131,7 @@ const ServiceCardDesign = ({ title, desc, index, activeCard, setActiveCard }) =>
                 exit={{ opacity: 0, y: 10 }}
                 transition={{ duration: 0.3 }}
               >
-                <AnimatedButton 
-                  text="Read More >" // Kept original Read More format
-                  onClick={toggleExpand} 
-                />
+                <AnimatedButton text="Read More >" onClick={toggleExpand} />
               </motion.div>
             )}
             {isExpanded && (
@@ -141,10 +142,7 @@ const ServiceCardDesign = ({ title, desc, index, activeCard, setActiveCard }) =>
                 exit={{ opacity: 0, y: 10 }}
                 transition={{ duration: 0.3 }}
               >
-                <AnimatedButton 
-                  text="< Close" // Changed Close button text
-                  onClick={toggleExpand} 
-                />
+                <AnimatedButton text="< Close" onClick={toggleExpand} />
               </motion.div>
             )}
           </AnimatePresence>
@@ -154,9 +152,7 @@ const ServiceCardDesign = ({ title, desc, index, activeCard, setActiveCard }) =>
   );
 };
 
-
 // --- Main Services Component ---
-
 export default function Services() {
   const services = [
     {
@@ -189,18 +185,17 @@ export default function Services() {
 
   return (
     <div className="bg-black text-white min-h-screen flex flex-col font-poppins overflow-hidden">
-      
       <header className="w-full pt-16 pb-8">
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
-          className="text-center text-[48px] font-bold text-white font-inter"
+          className="text-left ml-4 md:ml-20 text-[35px] mt-10 md:text-[48px] font-bold text-white font-inter"
         >
-          Our Core Services
+          Our Core <span className="text-red-500">Services</span>
         </motion.h1>
       </header>
-      
+
       <main className="flex-grow">
         <div className="flex flex-col gap-0">
           {services.map((service, index) => (
@@ -215,7 +210,7 @@ export default function Services() {
           ))}
         </div>
       </main>
-      
+
       <Footer />
     </div>
   );

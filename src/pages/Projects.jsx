@@ -250,12 +250,12 @@ export default function Projects() {
   return (
     <div className="flex flex-col w-full bg-[#1B1716]">
       {/* ===== TOP CONTENT SECTION (Kept text-center) ===== */}
-      <section className="min-h-[60vh] flex flex-col items-center justify-center text-center px-6 md:px-20 pt-32 pb-16 bg-gradient-to-b from-[#0a0a0a]/30 to-transparent">
+      <section className="min-h-[60vh] flex flex-col items-left justify-left text-left ml-4 md:ml-10 text-[35px] ml-4 md:text-[48px md:px-20 pt-32 pb-16 bg-gradient-to-b from-[#0a0a0a]/30 to-transparent">
         <motion.h1
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6"
+          className="text-4xl  md:text-5xl lg:text-5xl font-bold text-white mb-4 md:mb-6"
         >
           Our <span className="text-[#F81A27]">Projects</span>
         </motion.h1>

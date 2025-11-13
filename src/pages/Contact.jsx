@@ -1,265 +1,292 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Mail, Phone, MapPin, Send } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
 import Footer from "../components/Footer";
 
-// --- Framer Motion Variants for Staggered Animations ---
-
-// Container variant for the whole section (triggers children)
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.1, // Stagger the appearance of elements
-      delayChildren: 0.3,
-    },
+    transition: { staggerChildren: 0.05, delayChildren: 0.1 },
   },
 };
 
-// Item variant for individual text blocks, contact items, and form fields
 const itemVariants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: { y: 0, opacity: 1, transition: { duration: 0.5, ease: "easeOut" } },
+  hidden: { y: 10, opacity: 0 },
+  visible: { y: 0, opacity: 1, transition: { duration: 0.4, ease: "easeOut" } },
 };
 
-// --- Custom Components for Reusability ---
-
-const ContactDetail = ({ icon: Icon, label, value }) => (
-  <motion.div 
-    variants={itemVariants} 
-    // Updated accent color to the requested #ED1B24 (Crimson Red)
-    className="flex items-start gap-4 p-4 rounded-xl border border-[#ED1B24]/20 backdrop-blur-sm transition duration-300 hover:bg-white/5 hover:border-[#ED1B24]/50"
-  >
-    {/* Updated icon color */}
-    <Icon className="text-[#ED1B24] min-w-[24px] min-h-[24px]" />
-    <div>
-      <p className="text-sm font-semibold text-gray-400">{label}</p>
-      <p className="text-base text-white">{value}</p>
-    </div>
-  </motion.div>
-);
-
-const FormInput = ({ label, type = "text", placeholder, isTextArea = false }) => (
+const FormInput = ({ label, type = "text", isTextArea = false }) => (
   <motion.div variants={itemVariants} className="w-full">
-    <label className="block text-sm font-medium text-gray-300 mb-2">{label}</label>
     {isTextArea ? (
       <textarea
         rows="4"
-        className="w-full bg-white/5 border border-white/20 rounded-xl px-5 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#ED1B24] transition duration-300 resize-none"
-        placeholder={placeholder}
+        className="w-full bg-transparent border-t-0 border-l-0 border-r-0 border-b border-gray-500 focus:border-b-white py-3 text-white placeholder-gray-300 focus:outline-none transition duration-300 resize-none"
+        placeholder={label}
+        aria-label={label}
       />
     ) : (
       <input
         type={type}
-        // Updated focus border color
-        className="w-full bg-white/5 border border-white/20 rounded-xl px-5 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#ED1B24] transition duration-300"
-        placeholder={placeholder}
+        className="w-full bg-transparent border-t-0 border-l-0 border-r-0 border-b border-gray-500 focus:border-b-white py-3 text-white placeholder-gray-300 focus:outline-none transition duration-300"
+        placeholder={label}
+        aria-label={label}
       />
     )}
   </motion.div>
 );
 
-// --- Main Component ---
-
 export default function ContactUs() {
   const [isSending, setIsSending] = useState(false);
+  const [showMap, setShowMap] = useState(false);
+  const [mapZ, setMapZ] = useState(0);
+  const [contentZ, setContentZ] = useState(20);
 
-  // 💡 FIX: Scroll to the top when the component mounts
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []); // Empty dependency array ensures it runs only once on mount
+  }, []);
 
-  // Mock form submission logic
+  useEffect(() => {
+    // Smoothly delay z-index change until opacity transitions complete
+    if (showMap) {
+      setTimeout(() => {
+        setMapZ(10);
+        setContentZ(0);
+      }, 400);
+    } else {
+      setTimeout(() => {
+        setMapZ(0);
+        setContentZ(20);
+      }, 400);
+    }
+  }, [showMap]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSending(true);
     setTimeout(() => {
       setIsSending(false);
-      // In a real app, you would handle API submission here
       console.log("Form submitted successfully!");
     }, 2000);
   };
-  
-  // Coordinates for the mock location (Surat, Gujarat, India)
-  const mapCenter = "21.1702,72.8311";
-  const mapZoom = "13";
-  
-  // Using Google Maps Embed API pattern for an interactive map iframe.
-  const mapUrl = `https://maps.google.com/maps?q=${mapCenter}&z=${mapZoom}&output=embed`;
 
-  return (<>
-    <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center p-4 sm:p-10 font-inter relative overflow-hidden">
-      
-      {/* Background radial gradient for visual depth - Updated color to #ED1B24 */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-[#ED1B24] rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-gray-700 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+  const RAJKOT_COORDS = "22.3072,70.8022";
+  const MAP_ZOOM = 12;
+  const mapUrl = `https://maps.google.com/maps?q=${RAJKOT_COORDS}&hl=en&z=${MAP_ZOOM}&output=embed`;
 
-      <motion.div
-        className="max-w-7xl w-full grid lg:grid-cols-3 gap-12 z-10 p-4 md:p-8"
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
+  const MAIN_BG = "#121212";
+  const TEXT_COLOR = "#FFFFFF";
+
+  return (
+    <>
+      <div
+        className="min-h-screen relative flex flex-col items-center justify-start pt-12 pb-24 font-sans overflow-hidden"
+        style={{ backgroundColor: MAIN_BG }}
       >
-        
-        {/* === LEFT INFO SECTION (1/3 width on desktop) === */}
-        <motion.div className="lg:col-span-1 space-y-10">
-          <motion.div variants={itemVariants}>
-            {/* Updated text color */}
-            <p className="text-xl text-[#ED1B24] font-medium mb-3">CONTACT US</p>
-            <h1 className="text-5xl lg:text-6xl font-extrabold leading-tight">
-              Let’s Build Something <span className="text-[#ED1B24]">Great</span> Together
-            </h1>
-          </motion.div>
-          
-          <motion.p variants={itemVariants} className="text-gray-300 text-lg leading-relaxed max-w-lg">
-            Whether you have a project in mind, a question, or just want to explore how **Blitz Innovation** can transform your business digitally — we’re here to help. Reach out and start your innovation journey today.
-          </motion.p>
-
-          {/* Contact Details Grid (Staggered Animation) */}
-          <motion.div 
-            className="space-y-4"
-            variants={containerVariants}
-          >
-            <ContactDetail 
-              icon={Mail} 
-              label="Email Address" 
-              value="blitzinnovation@gmail.com" 
-            />
-            <ContactDetail 
-              icon={Phone} 
-              label="Phone Number" 
-              value="+91 98765 43210" 
-            />
-            {/* Re-added MapPin detail */}
-            <ContactDetail 
-              icon={MapPin} 
-              label="Office Location" 
-              value="Rajkot, Gujarat, India" 
-            />
-          </motion.div>
-          
-          <motion.div variants={itemVariants}>
-             <h2 className="text-2xl font-bold mt-8 text-white">View Our Office on Map</h2>
-          </motion.div>
-        </motion.div>
-
-        {/* === RIGHT FORM SECTION (2/3 width on desktop) === */}
-        <motion.form
-          onSubmit={handleSubmit}
-          className="lg:col-span-2 bg-white/5 border border-white/20 rounded-3xl p-8 sm:p-12 shadow-2xl space-y-6"
-          variants={containerVariants}
+        {/* === MAP BACKGROUND === */}
+        <motion.div
+          key="map-layer"
+          className="absolute inset-0 map-wrapper"
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: showMap ? 1 : 0.6,
+            transition: { duration: 0.8, ease: "easeInOut" },
+          }}
+          style={{
+            zIndex: mapZ,
+            transition: "z-index 0s linear 0.8s",
+          }}
         >
-          <FormInput 
-            label="Your Name" 
-            placeholder="blitz Innovation" 
-          />
-          
-          <div className="grid sm:grid-cols-2 gap-6">
-            <FormInput 
-              label="Work Email" 
-              type="email" 
-              placeholder="you@company.com" 
-            />
-            <FormInput 
-              label="Phone" 
-              type="tel" 
-              placeholder="+91" 
-            />
-          </div>
-          
-          <FormInput 
-            label="Project Description" 
-            placeholder="Tell us about your innovative idea..." 
-            isTextArea={true}
-          />
-
-          <motion.button
-            type="submit"
-            disabled={isSending}
-            whileHover={{ scale: isSending ? 1 : 1.02 }}
-            whileTap={{ scale: isSending ? 1 : 0.98 }}
-            // Updated button colors: background is bright red, text is white, hover is a darker red
-            className={`w-full flex items-center justify-center gap-3 py-4 rounded-xl font-semibold transition duration-300 shadow-lg ${
-              isSending
-                ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                : 'bg-[#ED1B24] text-white hover:bg-[#C4141A]'
-            }`}
-          >
-            {isSending ? (
-              <>
-<div className="flex flex-col items-center space-y-3">
-  {/* Dark mode spinner */}
-  <svg
-    className="animate-spin h-5 w-5 text-[#1B1716]"
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-  >
-    <circle
-      className="opacity-25"
-      cx="12"
-      cy="12"
-      r="10"
-      stroke="currentColor"
-      strokeWidth="4"
-    ></circle>
-    <path
-      className="opacity-75"
-      fill="currentColor"
-      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-    ></path>
-  </svg>
-
-  {/* Rajkot location text */}
-  <p className="text-sm font-medium text-[#1B1716]">Rajkot, India</p>
-</div>
-
-                Sending...
-              </>
-            ) : (
-              <>
-                Send Message <Send className="w-5 h-5 ml-2" />
-              </>
-            )}
-          </motion.button>
-        </motion.form>
-        
-        {/* === MAP SECTION (Full width below on mobile, 2/3 on large screens) === */}
-        <motion.div 
-            className="lg:col-span-3 h-[400px] rounded-3xl overflow-hidden shadow-2xl border border-white/20 relative"
-            variants={itemVariants}
-        >
-          {/* Note: Map is visually in "dark mode" due to the surrounding professional dark theme */}
           <iframe
             src={mapUrl}
             width="100%"
             height="100%"
-            allowFullScreen=""
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-            title="Blitz Innovation Office Location"
-            className="border-0"
+            title="Rajkot Office Location"
+            allowFullScreen
+            style={{
+              border: 0,
+              minHeight: "100vh",
+              pointerEvents: showMap ? "auto" : "none",
+            }}
           ></iframe>
         </motion.div>
 
-      </motion.div>
-      
-      {/* Required style for background animation (animate-blob, animation-delay-4000) */}
-      <style>{`
-        @keyframes blob {
-          0% { transform: translate(0px, 0px) scale(1); }
-          33% { transform: translate(30px, -50px) scale(1.1); }
-          66% { transform: translate(-20px, 20px) scale(0.9); }
-          100% { transform: translate(0px, 0px) scale(1); }
-        }
-        .animate-blob { animation: blob 7s infinite; }
-        .animation-delay-4000 { animation-delay: 4s; }
-      `}</style>
+        {/* === GRADIENT OVERLAY === */}
+        <motion.div
+          className="absolute inset-0 gradient-overlay pointer-events-none"
+          animate={{
+            opacity: showMap ? 1 : 1,
+          }}
+          transition={{ duration: 0.8, ease: "easeInOut" }}
+          style={{
+            backgroundImage: `linear-gradient(to top, ${MAIN_BG} 0%, rgba(18,18,18,0.7) 40%, ${MAIN_BG} 100%)`,
+            zIndex: 2,
+          }}
+        ></motion.div>
 
-    </div>
-    <Footer />
+        {/* === MAIN CONTENT === */}
+        <motion.div
+          className="relative max-w-7xl w-full mx-auto p-4 sm:p-10"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          transition={{ duration: 0.8, ease: "easeInOut" }}
+          style={{
+            opacity: showMap ? 0 : 1,
+            zIndex: contentZ,
+            pointerEvents: showMap ? "none" : "auto",
+            transition:
+              "opacity 0.8s ease-in-out, z-index 0s linear 0.8s, pointer-events 0.8s ease-in-out",
+          }}
+        >
+          <div className="flex flex-col lg:flex-row justify-between">
+            {/* === LEFT CONTACT INFO === */}
+            <div className="w-full lg:w-2/3 xl:w-7/12 space-y-10 lg:space-y-14 mb-8 lg:mb-0 text-white">
+              <motion.h1
+                variants={itemVariants}
+                className="text-5xl mt-[50px] md:mt-0 md:text-6xl font-light"
+              >
+                Contact <span className="text-red-500">us</span>
+              </motion.h1>
+
+              {/* Address Section */}
+              <div className="flex flex-col sm:flex-row gap-8 sm:gap-10">
+                <motion.div variants={itemVariants} className="space-y-3">
+                  <p className="text-xs uppercase tracking-widest text-red-500 font-bold">
+                  ADDRESS
+                  </p>
+                  <p className="text-sm font-light">47, Office 202</p>
+                  <p className="text-sm font-light">150 Feet Ring Road</p>
+                  <p className="text-sm font-light">Rajkot, Gujarat, India</p>
+                </motion.div>
+
+                <motion.div variants={itemVariants} className="space-y-3">
+                  <p className="text-xs uppercase tracking-widest text-red-500 font-bold">
+                  CONTACTS
+                  </p>
+                  <p className="text-sm font-light">blitzinnocation@gmail.com</p>
+                  <p className="text-sm font-light">+91 987 654 3210</p>
+                </motion.div>
+              </div>
+
+              {/* Follow Us Section */}
+              <motion.div
+                variants={itemVariants}
+                className="flex flex-wrap items-center gap-4 sm:gap-6 mt-6"
+              >
+                <p className="text-sm uppercase tracking-widest text-white">
+                  — follow us
+                </p>
+                {[Facebook, Twitter, Instagram, Linkedin].map((Icon, i) => (
+                  <motion.a
+                    key={i}
+                    href="#"
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ duration: 0.2 }}
+                    className="text-white hover:text-gray-400 transition"
+                  >
+                    <Icon className="w-5 h-5" />
+                  </motion.a>
+                ))}
+              </motion.div>
+            </div>
+
+            {/* === RIGHT FORM === */}
+            <motion.form
+              onSubmit={handleSubmit}
+              className="w-full mt-10 lg:mt-[100px] lg:ml-8 lg:w-2/5 xl:w-5/12 space-y-6"
+              variants={containerVariants}
+              style={{
+                color: TEXT_COLOR,
+                position: "relative",
+                zIndex: showMap ? 0 : 10,
+              }}
+            >
+              <motion.p
+                variants={itemVariants}
+                className="text-xs uppercase tracking-widest mb-4 text-white"
+              >
+                FEEDBACK FORM
+              </motion.p>
+
+              <FormInput label="Name" type="text" />
+              <FormInput label="E-mail" type="email" />
+              <FormInput label="Phone" type="tel" />
+              <FormInput label="Message" isTextArea />
+
+              <div className="flex justify-end items-center pt-4">
+                <motion.button
+                  type="submit"
+                  disabled={isSending}
+                  whileHover={{ scale: isSending ? 1 : 1.02 }}
+                  whileTap={{ scale: isSending ? 1 : 0.98 }}
+                  className={`py-3 px-8 text-sm font-semibold uppercase tracking-widest transition duration-300 ${
+                    isSending
+                      ? "bg-gray-700 text-gray-400 cursor-not-allowed"
+                      : "bg-white text-black hover:bg-gray-300"
+                  }`}
+                  style={{ borderRadius: "0px" }}
+                >
+                  {isSending ? "Sending..." : "Send Message"}
+                </motion.button>
+              </div>
+            </motion.form>
+          </div>
+        </motion.div>
+
+        {/* PAGE LABEL */}
+        <div
+          className="absolute bottom-4 right-10 text-white text-xs opacity-60 hidden sm:block"
+          style={{
+            zIndex: contentZ,
+          }}
+        >
+          / 28
+          <p className="mt-1">Contact Us</p>
+        </div>
+
+        {/* === FIXED FIND/BACK BUTTON === */}
+        <motion.button
+          onClick={() => setShowMap(!showMap)}
+          animate={{
+            opacity: [0.8, 1],
+            backgroundColor: showMap ? "#3a3a3a" : "#2b2b2b",
+          }}
+          transition={{
+            duration: 0.6,
+            ease: "easeInOut",
+          }}
+          whileHover={{ opacity: 1, backgroundColor: "#4a4a4a" }}
+          whileTap={{ scale: 0.97 }}
+          className="fixed bottom-0 left-0 w-[65px] h-[65px] flex items-center justify-center text-white text-sm font-semibold uppercase tracking-widest transition duration-300"
+          style={{
+            borderRadius: "0px",
+            zIndex: 9999,
+          }}
+        >
+          <AnimatePresence mode="wait">
+            <motion.span
+              key={showMap ? "back" : "find"}
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -5 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+            >
+              {showMap ? "Back" : "Find"}
+            </motion.span>
+          </AnimatePresence>
+        </motion.button>
+
+        <style>{`
+          .map-wrapper iframe {
+            filter: grayscale(100%) invert(90%) brightness(130%) hue-rotate(180deg);
+          }
+        `}</style>
+      </div>
+
+      <Footer />
     </>
   );
 }
