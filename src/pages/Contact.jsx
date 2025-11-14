@@ -157,8 +157,8 @@ export default function ContactUs() {
                   <p className="text-xs uppercase tracking-widest text-red-500 font-bold">
                   ADDRESS
                   </p>
-                  <p className="text-sm font-light">47, Office 202</p>
-                  <p className="text-sm font-light">150 Feet Ring Road</p>
+                  <p className="text-sm font-light">Rajkot</p>
+                  <p className="text-sm font-light">Rajkot</p>
                   <p className="text-sm font-light">Rajkot, Gujarat, India</p>
                 </motion.div>
 
@@ -166,8 +166,9 @@ export default function ContactUs() {
                   <p className="text-xs uppercase tracking-widest text-red-500 font-bold">
                   CONTACTS
                   </p>
-                  <p className="text-sm font-light">blitzinnocation@gmail.com</p>
-                  <p className="text-sm font-light">+91 987 654 3210</p>
+                  <p className="text-sm font-light">blitzinnovations@gmail.com </p>
+                  <p className="text-sm font-light">+91  63532 74199 </p>
+                  <p className="text-sm font-light">+91  74588 83333 </p>
                 </motion.div>
               </div>
 

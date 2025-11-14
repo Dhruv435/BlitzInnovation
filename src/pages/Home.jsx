@@ -83,20 +83,52 @@ export default function Home({ isTransitioning, currentSlide, onSlideChange, onN
   const { scrollY } = useScroll();
   const yHero = useTransform(scrollY, [0, 300], [0, 50]);
   const yContent = useTransform(scrollY, [0, 300], [0, 30]);
-  const yButton = useTransform(scrollY, [0, 300], [0, 20]);
 
   const fadeVariants = {
     enter: { opacity: 0, scale: 1.05 },
-    center: { opacity: 1, scale: 1, transition: { duration: 1.2, ease: [0.43, 0.13, 0.23, 0.96] } },
-    exit: { opacity: 0, scale: 0.95, transition: { duration: 1 } },
+    center: {
+      opacity: 1,
+      scale: 1,
+      transition: { duration: 1.2, ease: [0.43, 0.13, 0.23, 0.96] },
+    },
+    exit: {
+      opacity: 0,
+      scale: 0.95,
+      transition: { duration: 1 },
+    },
   };
 
   const handleLearnMore = () => {
-    if (onNavigate) {
-      onNavigate("/about");
-    } else {
-      navigate("/about");
+    if (onNavigate) onNavigate("/about");
+    else navigate("/about");
+  };
+
+  const goToSlide = (index) => {
+    if (index !== current) {
+      setDirection(index > current ? 1 : -1);
+      setCurrent(index);
+      resetInterval();
     }
+  };
+
+  const goToNext = () => {
+    const nextIndex = (current + 1) % heroData.length;
+    goToSlide(nextIndex);
+  };
+
+  const goToPrev = () => {
+    const prevIndex = (current - 1 + heroData.length) % heroData.length;
+    goToSlide(prevIndex);
+  };
+
+  const wipeVariants = {
+    rest: { width: "0%", transition: { duration: 0.5, ease: "easeInOut" } },
+    hover: { width: "100%", transition: { duration: 0.5, ease: "easeInOut" } },
+  };
+
+  const textWipe = {
+    rest: { width: "0%", transition: { duration: 0.45, ease: "easeInOut" } },
+    hover: { width: "100%", transition: { duration: 0.45, ease: "easeInOut" } },
   };
 
   return (
@@ -154,46 +186,60 @@ export default function Home({ isTransitioning, currentSlide, onSlideChange, onN
                 {currentHero.desc}
               </p>
 
+              {/* Learn More */}
               <motion.button
-                style={{
-                  background: "#E50922",
-                  border: "1px solid #1B1716",
-                  borderRadius: "0px",
-                  color: "white",
-                }}
-                className="mt-10 px-6 py-2.5 text-lg font-semibold transition-all duration-300"
-                whileHover={{
-                  scale: 1.05,
-                  background: "#a00006",
-                }}
-                whileTap={{ scale: 0.95 }}
+                className="mt-10 px-6 py-2.5 text-lg font-semibold relative overflow-hidden bg-[#1B1716] border border-[#D7001A] text-[#D7001A]"
                 onClick={handleLearnMore}
+                initial="rest"
+                whileHover="hover"
+                whileTap={{ scale: 0.96 }}
               >
-                Learn More
+                <motion.div
+                  variants={wipeVariants}
+                  className="absolute inset-0 bg-[#D7001A] z-0"
+                  style={{ right: 0, left: "auto" }}
+                />
+
+                <span className="relative z-10 block">
+                  <div className="relative text-[#D7001A]">
+                    Learn More
+                    <motion.div
+                      variants={textWipe}
+                      className="absolute inset-0 overflow-hidden text-white whitespace-nowrap"
+                    >
+                      Learn More
+                    </motion.div>
+                  </div>
+                </span>
               </motion.button>
             </motion.div>
           </AnimatePresence>
         </div>
       )}
 
-      {/* Bottom-right slide indicator */}
+      {/* Right Controls */}
       {!isInitialLoad && (
         <motion.div
-          className="absolute right-4 sm:right-16 flex items-center gap-3 sm:gap-4 z-10 bottom-[200px] sm:bottom-[72px]"
+          className="absolute right-4 sm:right-16 flex items-center gap-6 z-10 bottom-[200px] sm:bottom-[72px]"
           initial={{ opacity: 0 }}
           animate={{ opacity: isTransitioning ? 0 : 1 }}
           transition={{ duration: 0.6 }}
         >
+
+         
+
           <motion.span
             key={`number-${currentHero.id}`}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 1, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             className="font-[Impact] text-[36px] sm:text-[54px] text-white leading-none tracking-wider"
           >
             0{currentHero.id}
           </motion.span>
+
           <span className="text-gray-400 text-[20px] sm:text-[32px]">|</span>
+
           <div className="flex flex-col gap-2 sm:gap-3">
             {heroData.map((_, index) => (
               <motion.div
@@ -207,13 +253,7 @@ export default function Home({ isTransitioning, currentSlide, onSlideChange, onN
                 }}
                 whileHover={{ scale: 1.5, opacity: 1 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
-                onClick={() => {
-                  if (index !== current) {
-                    setDirection(index > current ? 1 : -1);
-                    setCurrent(index);
-                    resetInterval();
-                  }
-                }}
+                onClick={() => goToSlide(index)}
               ></motion.div>
             ))}
           </div>

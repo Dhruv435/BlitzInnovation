@@ -137,46 +137,57 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
           {buttons.map((btn, i) => (
             <div
               key={i}
-              className="group relative w-[70px] h-[70px] sm:w-[65px] sm:h-[65px] flex justify-center items-center transition-all duration-500 cursor-pointer"
+              className="btn-flip-container group relative w-[70px] h-[70px] sm:w-[65px] sm:h-[65px] flex justify-center items-center cursor-pointer"
               style={{
                 backgroundColor: btn.color,
-                boxShadow: "0 4px 20px rgba(248,26,39,0.3)",
-                borderTop: "1px solid rgba(255,255,255,0.15)",
-                borderLeft: "1px solid rgba(255,255,255,0.1)",
+                boxShadow: "0 0px 0px rgba(248,26,39,0.3)",
                 backdropFilter: "blur(10px)",
               }}
             >
               {btn.label === "Menu" ? (
                 <button
-  onClick={handleMenuClick}
-  className="relative group focus:outline-none"
->
-  <div className="relative flex items-center justify-center rounded-full w-[45px] h-[45px] sm:w-[40px] sm:h-[40px] transition-all duration-300 backdrop-blur-lg">
-    {!menuOpen ? (
-      <div className="flex flex-col justify-between w-[18px] h-[18px] transform transition-all duration-300 origin-center">
-        <div className="bg-[#1B1716] h-[3px] w-1/2 rounded transition-all duration-300 origin-right delay-75"></div>
-        <div className="bg-[#1B1716] h-[2px] rounded"></div>
-        <div className="bg-[#1B1716] h-[3px] w-1/2 rounded self-end transition-all duration-300 origin-left delay-75"></div>
-      </div>
-    ) : (
-      <X className="text-[#1B1716]" size={26} />
-    )}
-  </div>
-</button>
-
+                  onClick={handleMenuClick}
+                  className="btn-flip-menu focus:outline-none w-full h-full flex items-center justify-center"
+                >
+                  <div className="btn-flip-front">
+                    {!menuOpen ? (
+                      <div className="flex flex-col justify-between w-[18px] h-[18px]">
+                        <div className="bg-[#1B1716] h-[3px] w-1/2 rounded"></div>
+                        <div className="bg-[#1B1716] h-[2px] rounded"></div>
+                        <div className="bg-[#1B1716] h-[3px] w-1/2 rounded self-end"></div>
+                      </div>
+                    ) : (
+                      <X className="text-[#1B1716]" size={26} />
+                    )}
+                  </div>
+                  <div className="btn-flip-back">
+                    {!menuOpen ? (
+                      <span className="text-[#fff] font-semibold text-xs">MENU</span>
+                    ) : (
+                      <span className="text-[#fff] font-semibold text-xs">CLOSE</span>
+                    )}
+                  </div>
+                </button>
               ) : (
-              <button
-  onClick={handleShareClick}
-  className="transition-transform duration-500 focus:outline-none"
->
-  {shareOpen ? (
-    <X size={26} className="text-[#1B1716]" />
-  ) : (
-    <span style={{ color: "#1B1716", fontWeight: "600", fontSize: "13px" }}>SHARE</span>
-  )}
-</button>
-
-
+                <button
+                  onClick={handleShareClick}
+                  className="btn-flip-share focus:outline-none w-full h-full flex items-center justify-center"
+                >
+                  <div className="btn-flip-front">
+                    {shareOpen ? (
+                      <X size={26} className="text-[#1B1716]" />
+                    ) : (
+                      <span style={{ color: "#1B1716", fontWeight: "600", fontSize: "13px" }}>SHARE</span>
+                    )}
+                  </div>
+                  <div className="btn-flip-back">
+                    {shareOpen ? (
+                      <span className="text-[#fff] font-semibold text-xs">CLOSE</span>
+                    ) : (
+                      <Send size={24} className="text-[#fff]" />
+                    )}
+                  </div>
+                </button>
               )}
             </div>
           ))}
@@ -288,44 +299,147 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
               height: 55px !important;
             }
           }
+
+          /* Flip Animation Styles for Menu and Share Buttons */
+          .btn-flip-menu,
+          .btn-flip-share {
+            position: relative;
+            perspective: 1000px;
+          }
+
+          .btn-flip-front,
+          .btn-flip-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backface-visibility: hidden;
+            transition: transform 0.5s, opacity 0.5s;
+          }
+
+          .btn-flip-front {
+            transform: translateY(0) rotateX(0);
+            opacity: 1;
+          }
+
+          .btn-flip-back {
+            transform: translateY(-50%) rotateX(90deg);
+            opacity: 0;
+            background: #141414;
+          }
+
+          .btn-flip-menu:hover .btn-flip-front,
+          .btn-flip-share:hover .btn-flip-front {
+            transform: translateY(50%) rotateX(90deg);
+            opacity: 0;
+          }
+
+          .btn-flip-menu:hover .btn-flip-back,
+          .btn-flip-share:hover .btn-flip-back {
+            transform: translateY(0) rotateX(0);
+            opacity: 1;
+          }
+
+          /* Flip Animation Styles for Arrow Buttons */
+          .btn-flip-arrow {
+            position: relative;
+            perspective: 1000px;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .arrow-flip-front,
+          .arrow-flip-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backface-visibility: hidden;
+            transition: transform 0.5s, opacity 0.5s;
+          }
+
+          .arrow-flip-front {
+            transform: translateY(0) rotateX(0);
+            opacity: 1;
+          }
+
+          .arrow-flip-back {
+            transform: translateY(-50%) rotateX(90deg);
+            opacity: 0;
+            background: #141414;
+          }
+
+          .btn-flip-arrow:hover .arrow-flip-front {
+            transform: translateY(50%) rotateX(90deg);
+            opacity: 0;
+          }
+
+          .btn-flip-arrow:hover .arrow-flip-back {
+            transform: translateY(0) rotateX(0);
+            opacity: 1;
+          }
         `}</style>
       </header>
 
       {/* ✅ BOTTOM SLIDER CONTROLS - Left side at bottom 0px */}
       {currentPath === "/" && (
         <div className="fixed bottom-0 left-0 z-30 flex">
+
+          <div
+      className="absolute bottom-0 left-0"
+      style={{
+        width: "140px",
+        height: "70px",
+        backgroundColor: "#000",
+        zIndex: -10,
+      }}
+    ></div>
+
           {/* Left Arrow Button */}
           <div
             onClick={handlePrevSlide}
-            className={`w-[70px] h-[70px] sm:w-[70px] sm:h-[70px] flex items-center justify-center cursor-pointer transition-all duration-300 ${
-              isChanging ? "opacity-80 pointer-events-none" : "hover:opacity-100 hover:bg-opacity-100"
+            className={`w-[70px] h-[70px] sm:w-[70px] sm:h-[70px] cursor-pointer ${
+              isChanging ? "opacity-80 pointer-events-none" : ""
             }`}
             style={{
               backgroundColor: "#C70008",
             }}
           >
-            <ChevronLeft 
-              size={28} 
-              color="white" 
-              className="transition-transform duration-300 hover:scale-110"
-            />
+            <div className="btn-flip-arrow">
+              <div className="arrow-flip-front">
+                <ChevronLeft size={28} color="white" />
+              </div>
+              <div className="arrow-flip-back">
+                <span className="text-white font-semibold text-xs">PREVIOUS</span>
+              </div>
+            </div>
           </div>
 
           {/* Right Arrow Button */}
           <div
             onClick={handleNextSlide}
-            className={`w-[70px] h-[70px] sm:w-[70px] sm:h-[70px] flex items-center justify-center cursor-pointer transition-all duration-300 ${
-              isChanging ? "opacity-80 pointer-events-none" : "hover:opacity-100 hover:bg-opacity-100"
+            className={`w-[70px] h-[70px] sm:w-[70px] sm:h-[70px] cursor-pointer ${
+              isChanging ? "opacity-80 pointer-events-none" : ""
             }`}
             style={{
               backgroundColor: "#F81A27",
             }}
           >
-            <ChevronRight 
-              size={28} 
-              color="white" 
-              className="transition-transform duration-300 hover:scale-110"
-            />
+            <div className="btn-flip-arrow">
+              <div className="arrow-flip-front">
+                <ChevronRight size={28} color="white" />
+              </div>
+              <div className="arrow-flip-back">
+                <span className="text-white font-semibold text-xs">NEXT</span>
+              </div>
+            </div>
           </div>
 
           {/* Explore Now Button - MOBILE ONLY (Full Width) */}
@@ -337,7 +451,7 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
               color: "white",
               fontWeight: 600,
               fontSize: "16px",
-              width: "calc(100vw - 120px)",
+              width: "calc(100vw - 140px)",
             }}
           >
             Explore Now

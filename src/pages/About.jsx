@@ -43,30 +43,38 @@ const TEAM_DATA = [
   {
     name: "Keval Gadara",
     role: "Founder & CEO",
-    // Placeholder image link, replace with actual links later
-    imageUrl: "https://picsum.photos/seed/keval/200/200",
+    // Placeholder image link for a male visionary/leader
+    imageUrl: "https://i.pinimg.com/736x/d6/36/d5/d636d53048eccf75fed71e3add231b94.jpg",
     description: "Visionary leader and head strategist.",
+    // Dark red overlay
+    overlayColor: "rgba(248, 26, 39, 0.75)",
   },
   {
     name: "Prit Chadamiya",
     role: "Director & CFO",
-    // Placeholder image link, replace with actual links later
-    imageUrl: "https://picsum.photos/seed/prit/200/200",
+    // Placeholder image link for a male financial expert
+    imageUrl: "https://i.pinimg.com/736x/65/09/01/650901fb476b9d81f814be357f527856.jpg",
     description: "Financial expert and corporate director.",
+    // Darker red overlay
+    overlayColor: "rgba(200, 20, 30, 0.8)",
   },
   {
     name: "Umang Zalariya",
     role: "CTO",
-    // Placeholder image link, replace with actual links later
-    imageUrl: "https://picsum.photos/seed/umang/200/200",
+    // Placeholder image link for a male technology officer
+    imageUrl: "https://i.pinimg.com/736x/c2/3a/03/c23a0397c49922f805384defbefbd6c3.jpg",
     description: "Chief Technology Officer and architect of innovation.",
+    // Slightly more magenta overlay
+    overlayColor: "rgba(230, 0, 50, 0.7)",
   },
   {
     name: "Vruti Gadara",
     role: "Web Developer/COO/CPO",
-    // Placeholder image link, replace with actual links later
-    imageUrl: "https://picsum.photos/seed/vruti/200/200",
+    // Placeholder image link for a female developer/operations head
+    imageUrl: "https://i.pinimg.com/736x/10/d3/74/10d374f94b1e73a8ec94a24c4ac4e92a.jpg",
     description: "Full-stack developer, operations, and product head.",
+    // Bright red overlay
+    overlayColor: "rgba(248, 26, 39, 0.85)",
   },
 ];
 
@@ -118,27 +126,6 @@ const TeamSection = () => {
     setCurrentIndex((prevIndex) => (prevIndex === numItems - 1 ? 0 : prevIndex + 1));
   };
 
-  // Logic for scroll/drag snap (for touch-enabled devices on desktop/mobile)
-  // This helps in aligning the card when scrolling/dragging, especially on desktop if using touch/trackpad.
-  const handleScrollEnd = () => {
-    if (!sliderRef.current) return;
-
-    const scrollLeft = sliderRef.current.scrollLeft;
-    const cardWidth =
-      sliderRef.current.offsetWidth /
-      (window.innerWidth >= 1024 ? 4 : window.innerWidth >= 640 ? 2 : 1); // Approximate card width per view
-
-    // Calculate the closest index and snap to it
-    const closestIndex = Math.round(scrollLeft / cardWidth);
-    setCurrentIndex(closestIndex);
-
-    // Optional: Smoothly scroll to the snapped position
-    // sliderRef.current.scrollTo({
-    //    left: closestIndex * cardWidth,
-    //    behavior: 'smooth'
-    // });
-  };
-
   // Effect to scroll to the current index for mobile view on button click
   React.useEffect(() => {
     if (sliderRef.current && window.innerWidth < 1024) {
@@ -156,7 +143,7 @@ const TeamSection = () => {
       }
     }
   }, [currentIndex]);
-
+  
   return (
     <motion.section
       ref={sectionRef}
@@ -186,33 +173,59 @@ const TeamSection = () => {
             <motion.div
               key={index}
               variants={fadeUp}
-              className="bg-[#221E1D] border border-[#2E2A29] rounded-xl p-6 hover:border-[#F81A27]/40 transition-all text-center group relative overflow-hidden shadow-lg"
-              whileHover={{ scale: 1.05, y: -10 }}
+              className="relative w-full h-[300px] border-4 border-[#2E2A29] rounded-xl overflow-hidden shadow-lg group cursor-pointer"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.3 }}
+              style={{
+                // Custom background image styling
+                backgroundImage: `url(${member.imageUrl})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center center',
+                borderRadius: "24px",
+                transition: 'transform 0.5s ease-out, border-color 0.3s',
+              }}
             >
-              {/* Decorative accent */}
-              <div className="absolute top-0 left-0 w-2 h-full bg-[#F81A27]/50 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500"></div>
+              {/* IMAGE / VECTOR BACKGROUND - Handled by inline style */}
 
-              {/* IMAGE AREA - Updated to use image URL with circular frame and red border */}
-              <div className="flex justify-center mb-6">
-                <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-[#F81A27] overflow-hidden group-hover:scale-110 transition-transform duration-300 relative z-10">
-                  <img
-                    src={member.imageUrl}
-                    alt={member.name}
-                    className="w-full h-full object-cover"
-                    // Added Image Tag to describe the visual
-                    onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/200?text=Image+Error" }}
-                  />
-
+              {/* OVERLAY for Inset Box-Shadow Effect */}
+              <div
+                className="absolute inset-0 bg-black/40 transition-all duration-500 ease-out"
+                style={{
+                  backgroundColor: 'rgba(20, 20, 20, 0.3)', // Initial dark state
+                  transition: 'background-color 0.5s ease-out',
+                }}
+              ></div>
+              
+              {/* Overlay that changes color on hover, similar to the box-shadow effect */}
+              <div
+                className="absolute inset-0 transition-all duration-500 ease-out opacity-0 group-hover:opacity-100"
+                style={{
+                  backgroundColor: 'rgba(20, 20, 20, 0.4)',
+                  }}
+              ></div>
+              
+              {/* Content Area - Always visible part */}
+              <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-6 text-center z-10">
+                
+                {/* Container for Name and Role - This will move up on hover */}
+                <div className="transition-transform duration-500 group-hover:translate-y-[-100px]">
+                    <h3 className="text-lg sm:text-xl font-bold text-red-600 mb-1">
+                      {member.name}
+                    </h3>
+                    {/* Role text color changed to red for visibility */}
+                    <p className="text-white font-bold text-sm sm:text-base">
+                      {member.role}
+                    </p>
                 </div>
+                
+                {/* Hidden Description Text that fades in (FIXED) */}
+                <p
+                  className="absolute bottom-4 left-0 right-0 p-4 text-white text-sm sm:text-base opacity-0 transition-opacity duration-300 delay-300 group-hover:opacity-100"
+                >
+                  {member.description}
+                </p>
               </div>
-
-              <h3 className="text-lg sm:text-xl font-bold text-white mb-2 relative z-10">
-                {member.name}
-              </h3>
-              <p className="text-[#F81A27] font-medium mb-3 text-sm sm:text-base relative z-10">
-                {member.role}
-              </p>
-              <p className="text-xs sm:text-sm text-gray-400 relative z-10">{member.description}</p>
+              
             </motion.div>
           ))}
         </motion.div>
@@ -225,39 +238,58 @@ const TeamSection = () => {
             className="flex overflow-x-scroll snap-x snap-mandatory pb-4 space-x-6 sm:space-x-8 scrollbar-hide"
             // The scrollbar-hide class needs to be defined in your global CSS
             style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none' }}
-            // onScroll={handleScrollEnd} // Optional: for detecting drag snap
           >
             {TEAM_DATA.map((member, index) => (
               <motion.div
                 key={index}
                 variants={fadeUp}
-                className="flex-shrink-0 w-[85vw] sm:w-[calc(50vw-24px)] md:w-[calc(33.33vw-24px)] bg-[#221E1D] border border-[#2E2A29] rounded-xl p-6 text-center snap-center"
+                className="flex-shrink-0 w-[85vw] sm:w-[calc(50vw-24px)] md:w-[calc(33.33vw-24px)] relative h-[300px] border-4 border-[#2E2A29] rounded-xl overflow-hidden snap-center group cursor-pointer"
                 style={{
                   // Adjust margin for the first and last item to center them better
                   marginLeft: index === 0 ? 'auto' : undefined,
                   marginRight: index === numItems - 1 ? 'auto' : undefined,
+                  // Custom background image styling
+                  backgroundImage: `url(${member.imageUrl})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center center',
+                  transition: 'transform 0.5s ease-out, border-color 0.3s',
                 }}
               >
-                {/* IMAGE AREA - Updated to use image URL with circular frame and red border */}
-                <div className="flex justify-center mb-6">
-                  <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-[#F81A27] overflow-hidden relative z-10">
-                    <img
-                      src={member.imageUrl}
-                      alt={member.name}
-                      className="w-full h-full object-cover"
-                      // Added Image Tag to describe the visual
-                      onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/200?text=Image+Error" }}
-                    />
-                  </div>
-                </div>
+                 {/* IMAGE / VECTOR BACKGROUND - Handled by inline style */}
 
-                <h3 className="text-lg sm:text-xl font-bold text-white mb-2">
-                  {member.name}
-                </h3>
-                <p className="text-[#F81A27] font-medium mb-3 text-sm sm:text-base">
-                  {member.role}
-                </p>
-                <p className="text-xs sm:text-sm text-gray-400">{member.description}</p>
+                {/* OVERLAY for Inset Box-Shadow Effect (Mobile) */}
+                <div
+                  className="absolute inset-0 bg-black/50 transition-all duration-500 ease-out"
+                  style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+                ></div>
+                
+                {/* Overlay that changes color on hover (or on tap/focus for mobile) */}
+                <div
+                  className="absolute inset-0 transition-all duration-500 ease-out opacity-0 group-hover:opacity-100"
+                  style={{
+                    backgroundColor: member.overlayColor,
+                  }}
+                ></div>
+                
+                {/* Content Area - Always visible part */}
+                <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-6 text-center z-10">
+                  {/* Container for Name and Role - This will move up on hover */}
+                  <div className="transition-transform duration-500 group-hover:translate-y-[-100px]">
+                    <h3 className="text-lg sm:text-xl font-bold text-white mb-1">
+                      {member.name}
+                    </h3>
+                    <p className="text-[#F81A27] font-medium text-sm sm:text-base">
+                      {member.role}
+                    </p>
+                  </div>
+                  
+                  {/* Hidden Description Text that fades in (FIXED) */}
+                  <p
+                    className="absolute inset-0 flex items-center justify-center p-8 text-white text-sm sm:text-base opacity-0 transition-opacity duration-300 delay-300 group-hover:opacity-100"
+                  >
+                    {member.description}
+                  </p>
+                </div>
               </motion.div>
             ))}
           </motion.div>
@@ -676,12 +708,7 @@ const MobileQuickNav = ({ onNavigate }) => {
 
 // Main Component (UPDATED TO RECEIVE onNavigate PROP)
 export default function About({ onNavigate, isTransitioning }) {
-  // Use isTransitioning to conditionally hide/show content if needed, though
-  // the transition overlay handles most of the UX.
-
-  // The fade-in animation logic is adjusted to respect the global transition
-  // if you want to skip the internal page fade-in when the global transition is active.
-
+  
   const initialOpacity = isTransitioning ? 1 : 0;
   const animateOpacity = 1;
   const transitionDuration = isTransitioning ? 0 : 0.8;
