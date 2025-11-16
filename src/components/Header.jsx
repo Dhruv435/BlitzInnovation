@@ -16,7 +16,6 @@ import {
 import {
   FaInstagram,
   FaLinkedinIn,
-  FaFacebookF,
   FaTwitter,
   FaWhatsapp,
 } from "react-icons/fa";
@@ -44,30 +43,31 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
   ];
 
   const shareItems = [
-    { icon: <FaInstagram size={20} />, label: "Instagram", url: "https://www.instagram.com" },
-    { icon: <FaLinkedinIn size={20} />, label: "LinkedIn", url: "https://www.linkedin.com" },
-    { icon: <FaFacebookF size={20} />, label: "Facebook", url: "https://www.facebook.com" },
-    { icon: <FaTwitter size={20} />, label: "Twitter", url: "https://www.twitter.com" },
-    { icon: <FaWhatsapp size={20} />, label: "WhatsApp", url: "https://www.whatsapp.com" },
+    { icon: <FaInstagram size={20} />, label: "Instagram", url: "https://www.instagram.com/blitz_innovations?igsh=MTFoZnM5MmR0dzlhMA==" },
+    { icon: <FaLinkedinIn size={20} />, label: "LinkedIn", url: "https://www.linkedin.com/company/blitz-innovations/" },
+    { icon: <FaTwitter size={20} />, label: "Twitter", url: "https://x.com/BlitzInnovation" },
+    { icon: <FaWhatsapp size={20} />, label: "WhatsApp", url: "https://wa.me/916353274199?text=hello%20blitz" },
   ];
 
   const handleMenuClick = () => {
-    setMenuOpen(!menuOpen);
     if (shareOpen) setShareOpen(false);
+    setMenuOpen(!menuOpen);
   };
 
   const handleShareClick = () => {
-    setShareOpen(!shareOpen);
     if (menuOpen) setMenuOpen(false);
+    setShareOpen(!shareOpen);
   };
 
   const handleMenuItemClick = (page) => {
     setMenuOpen(false);
-    if (onNavigate) {
-      onNavigate(page);
-    } else {
-      navigate(page);
-    }
+    setTimeout(() => {
+      if (onNavigate) {
+        onNavigate(page);
+      } else {
+        navigate(page);
+      }
+    }, 300);
   };
 
   const handleLogoClick = () => {
@@ -109,8 +109,10 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
   };
 
   const handleShareItemClick = (url) => {
-    window.open(url, '_blank', 'noopener,noreferrer');
     setShareOpen(false);
+    setTimeout(() => {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }, 300);
   };
 
   return (
@@ -123,11 +125,11 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
         }}
       >
         {/* ✅ Left: Logo */}
-        <div className="flex items-center ml-[-13px] sm:ml-[65px]">
+        <div className="flex items-center ml-[-7px] sm:ml-[30px]">
           <img
             src={logo}
             alt="Blitz Logo"
-            className="h-16 sm:h-[70px] cursor-pointer transition-transform duration-500 hover:scale-105"
+            className="h-13 sm:h-[55px] cursor-pointer transition-transform duration-500 hover:scale-105"
             onClick={handleLogoClick}
           />
         </div>
@@ -201,7 +203,7 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
               <div
                 key={index}
                 onClick={() => handleMenuItemClick(item.page)}
-                className="flex items-center overflow-hidden cursor-pointer transition-all duration-300 hover:brightness-110"
+                className="flex items-center overflow-hidden cursor-pointer transition-all duration-300 menu-item-hover"
                 style={{
                   opacity: menuOpen ? 1 : 0,
                   transform: menuOpen ? "translateX(0)" : "translateX(200px)",
@@ -251,7 +253,7 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
             <div
               key={index}
               onClick={() => handleShareItemClick(item.url)}
-              className="flex items-center justify-center cursor-pointer transition-all duration-300 hover:brightness-125 hover:scale-110"
+              className="flex items-center justify-center cursor-pointer transition-all duration-300 share-item-hover"
               style={{
                 width: "60px",
                 height: "60px",
@@ -330,16 +332,19 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
             background: #141414;
           }
 
-          .btn-flip-menu:hover .btn-flip-front,
-          .btn-flip-share:hover .btn-flip-front {
-            transform: translateY(50%) rotateX(90deg);
-            opacity: 0;
-          }
+          /* Desktop hover effects only */
+          @media (hover: hover) and (pointer: fine) {
+            .btn-flip-menu:hover .btn-flip-front,
+            .btn-flip-share:hover .btn-flip-front {
+              transform: translateY(50%) rotateX(90deg);
+              opacity: 0;
+            }
 
-          .btn-flip-menu:hover .btn-flip-back,
-          .btn-flip-share:hover .btn-flip-back {
-            transform: translateY(0) rotateX(0);
-            opacity: 1;
+            .btn-flip-menu:hover .btn-flip-back,
+            .btn-flip-share:hover .btn-flip-back {
+              transform: translateY(0) rotateX(0);
+              opacity: 1;
+            }
           }
 
           /* Flip Animation Styles for Arrow Buttons */
@@ -376,14 +381,26 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
             background: #141414;
           }
 
-          .btn-flip-arrow:hover .arrow-flip-front {
-            transform: translateY(50%) rotateX(90deg);
-            opacity: 0;
-          }
+          /* Desktop hover effects only */
+          @media (hover: hover) and (pointer: fine) {
+            .btn-flip-arrow:hover .arrow-flip-front {
+              transform: translateY(50%) rotateX(90deg);
+              opacity: 0;
+            }
 
-          .btn-flip-arrow:hover .arrow-flip-back {
-            transform: translateY(0) rotateX(0);
-            opacity: 1;
+            .btn-flip-arrow:hover .arrow-flip-back {
+              transform: translateY(0) rotateX(0);
+              opacity: 1;
+            }
+
+            .menu-item-hover:hover {
+              filter: brightness(1.1);
+            }
+
+            .share-item-hover:hover {
+              filter: brightness(1.25);
+              transform: scale(1.1);
+            }
           }
         `}</style>
       </header>

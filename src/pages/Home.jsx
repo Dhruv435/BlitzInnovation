@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+
 import Blitzbg from "../assets/blitzbg.svg";
 import hero1 from "../assets/hero1.png";
 import hero2 from "../assets/hero2.png";
@@ -9,6 +10,10 @@ import hero4 from "../assets/hero4.png";
 
 export default function Home({ isTransitioning, currentSlide, onSlideChange, onNavigate }) {
   const navigate = useNavigate();
+  const touchStartX = useRef(null);
+  const touchEndX = useRef(null);
+  const longPressTimer = useRef(null);
+  const [animateLearnMore, setAnimateLearnMore] = useState(false);
 
   const heroData = [
     {
@@ -27,8 +32,7 @@ export default function Home({ isTransitioning, currentSlide, onSlideChange, onN
     },
     {
       id: 3,
-      title:
-        '<span style="color:#D7001A;">Innovate.</span> Create. Inspire.',
+      title: '<span style="color:#D7001A;">Innovate.</span> Create. Inspire.',
       desc: "Experience innovation with purpose – every design and line of code reflects the art of simplicity and sophistication.",
       image: hero3,
     },
@@ -58,7 +62,6 @@ export default function Home({ isTransitioning, currentSlide, onSlideChange, onN
     document.body.style.overflow = "hidden";
     const initialTimeout = setTimeout(() => setIsInitialLoad(false), 1500);
     resetInterval();
-
     return () => {
       clearTimeout(initialTimeout);
       if (intervalRef.current) clearInterval(intervalRef.current);
@@ -91,11 +94,7 @@ export default function Home({ isTransitioning, currentSlide, onSlideChange, onN
       scale: 1,
       transition: { duration: 1.2, ease: [0.43, 0.13, 0.23, 0.96] },
     },
-    exit: {
-      opacity: 0,
-      scale: 0.95,
-      transition: { duration: 1 },
-    },
+    exit: { opacity: 0, scale: 0.95, transition: { duration: 1 } },
   };
 
   const handleLearnMore = () => {
@@ -111,15 +110,30 @@ export default function Home({ isTransitioning, currentSlide, onSlideChange, onN
     }
   };
 
-  const goToNext = () => {
-    const nextIndex = (current + 1) % heroData.length;
-    goToSlide(nextIndex);
+  const goToNext = () => goToSlide((current + 1) % heroData.length);
+  const goToPrev = () => goToSlide((current - 1 + heroData.length) % heroData.length);
+
+  // MOBILE SWIPE HANDLERS
+  const onTouchStart = (e) => (touchStartX.current = e.changedTouches[0].clientX);
+  const onTouchMove = (e) => (touchEndX.current = e.changedTouches[0].clientX);
+
+  const onTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current) return;
+    const distance = touchStartX.current - touchEndX.current;
+    if (Math.abs(distance) > 50) distance > 0 ? goToNext() : goToPrev();
+    touchStartX.current = null;
+    touchEndX.current = null;
   };
 
-  const goToPrev = () => {
-    const prevIndex = (current - 1 + heroData.length) % heroData.length;
-    goToSlide(prevIndex);
+  // LEARN MORE LONG PRESS FOR MOBILE ONLY
+  const startLongPress = () => {
+    if (window.innerWidth > 768) return;
+    longPressTimer.current = setTimeout(() => {
+      setAnimateLearnMore(false);
+      setTimeout(() => setAnimateLearnMore(true), 50);
+    }, 200);
   };
+  const endLongPress = () => clearTimeout(longPressTimer.current);
 
   const wipeVariants = {
     rest: { width: "0%", transition: { duration: 0.5, ease: "easeInOut" } },
@@ -135,8 +149,10 @@ export default function Home({ isTransitioning, currentSlide, onSlideChange, onN
     <section
       className="relative w-full h-screen bg-[#1B1716] text-white overflow-hidden mt-[60px]"
       style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100vh" }}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
     >
-      {/* Background */}
       <motion.img
         src={Blitzbg}
         alt="Blitz Background"
@@ -147,7 +163,6 @@ export default function Home({ isTransitioning, currentSlide, onSlideChange, onN
         transition={{ duration: isInitialLoad ? 1.2 : 0.8, ease: [0.43, 0.13, 0.23, 0.96] }}
       />
 
-      {/* Hero Image */}
       <AnimatePresence mode="wait" custom={direction}>
         {!isInitialLoad && (
           <motion.img
@@ -165,7 +180,6 @@ export default function Home({ isTransitioning, currentSlide, onSlideChange, onN
         )}
       </AnimatePresence>
 
-      {/* Content */}
       {!isInitialLoad && (
         <div className="relative z-10 h-full flex flex-col justify-center mt-[-130px] sm:mt-[0px] pl-[20px] sm:pl-[80px] -ml-2 max-w-3xl">
           <AnimatePresence mode="wait" custom={direction}>
@@ -186,11 +200,13 @@ export default function Home({ isTransitioning, currentSlide, onSlideChange, onN
                 {currentHero.desc}
               </p>
 
-              {/* Learn More */}
               <motion.button
                 className="mt-10 px-6 py-2.5 text-lg font-semibold relative overflow-hidden bg-[#1B1716] border border-[#D7001A] text-[#D7001A]"
                 onClick={handleLearnMore}
+                onTouchStart={startLongPress}
+                onTouchEnd={endLongPress}
                 initial="rest"
+                animate={animateLearnMore ? "hover" : "rest"}
                 whileHover="hover"
                 whileTap={{ scale: 0.96 }}
               >
@@ -217,7 +233,6 @@ export default function Home({ isTransitioning, currentSlide, onSlideChange, onN
         </div>
       )}
 
-      {/* Right Controls */}
       {!isInitialLoad && (
         <motion.div
           className="absolute right-4 sm:right-16 flex items-center gap-6 z-10 bottom-[200px] sm:bottom-[72px]"
@@ -225,9 +240,6 @@ export default function Home({ isTransitioning, currentSlide, onSlideChange, onN
           animate={{ opacity: isTransitioning ? 0 : 1 }}
           transition={{ duration: 0.6 }}
         >
-
-         
-
           <motion.span
             key={`number-${currentHero.id}`}
             initial={{ opacity: 1, y: 20 }}

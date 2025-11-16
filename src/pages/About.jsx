@@ -132,9 +132,16 @@ const TeamSection = () => {
       // Find the first child's width (assuming all cards have the same width)
       const firstChild = sliderRef.current.children[0];
       if (firstChild) {
-        const cardWidth = firstChild.offsetWidth; // Get actual card width
-        // Calculate the scroll position based on the current index and card width
-        const scrollPosition = currentIndex * cardWidth;
+        // We need to account for the gap (space-x-6 or 8) which is 24px or 32px
+        // For 'space-x-6' (24px)
+        const gapSize = 24; 
+        // Get the width of the card including its left/right margins, but since we use flex/gap,
+        // we mainly need the width and the position.
+        const cardWidth = firstChild.offsetWidth; 
+        
+        // Calculate the scroll position based on the current index, card width, and gap
+        // The scroll position should be the start of the current card.
+        const scrollPosition = currentIndex * (cardWidth + gapSize);
 
         sliderRef.current.scrollTo({
           left: scrollPosition,
@@ -243,7 +250,7 @@ const TeamSection = () => {
               <motion.div
                 key={index}
                 variants={fadeUp}
-                className="flex-shrink-0 w-[85vw] sm:w-[calc(50vw-24px)] md:w-[calc(33.33vw-24px)] relative h-[300px] border-4 border-[#2E2A29] rounded-xl overflow-hidden snap-center group cursor-pointer"
+                className="flex-shrink-0 w-[85vw] sm:w-[calc(50vw-24px)] md:w-[calc(33.33vw-24px)] relative h-[350px] border-4 border-[#2E2A29] rounded-xl overflow-hidden snap-center group cursor-pointer"
                 style={{
                   // Adjust margin for the first and last item to center them better
                   marginLeft: index === 0 ? 'auto' : undefined,
@@ -257,47 +264,40 @@ const TeamSection = () => {
               >
                  {/* IMAGE / VECTOR BACKGROUND - Handled by inline style */}
 
-                {/* OVERLAY for Inset Box-Shadow Effect (Mobile) */}
+                {/* Initial Dark Overlay */}
                 <div
                   className="absolute inset-0 bg-black/50 transition-all duration-500 ease-out"
-                  style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
                 ></div>
                 
-                {/* Overlay that changes color on hover (or on tap/focus for mobile) */}
+                {/* Overlay that shows description on hover/tap */}
                 <div
-                  className="absolute inset-0 transition-all duration-500 ease-out opacity-0 group-hover:opacity-100"
+                  className="absolute inset-0 flex flex-col items-center justify-center p-8 transition-all duration-500 ease-out opacity-0 group-hover:opacity-100"
                   style={{
                     backgroundColor: member.overlayColor,
                   }}
-                ></div>
+                >
+                    <p className="text-white text-lg font-medium text-center leading-relaxed">
+                        {member.description}
+                    </p>
+                </div>
                 
-                {/* Content Area - Always visible part */}
-                <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-6 text-center z-10">
-                  {/* Container for Name and Role - This will move up on hover */}
-                  <div className="transition-transform duration-500 group-hover:translate-y-[-100px]">
+                {/* Content Area - Name and Role always visible at the bottom */}
+                <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 text-center z-10 bg-black/50 group-hover:opacity-0 transition-opacity duration-300">
                     <h3 className="text-lg sm:text-xl font-bold text-white mb-1">
                       {member.name}
                     </h3>
                     <p className="text-[#F81A27] font-medium text-sm sm:text-base">
                       {member.role}
                     </p>
-                  </div>
-                  
-                  {/* Hidden Description Text that fades in (FIXED) */}
-                  <p
-                    className="absolute inset-0 flex items-center justify-center p-8 text-white text-sm sm:text-base opacity-0 transition-opacity duration-300 delay-300 group-hover:opacity-100"
-                  >
-                    {member.description}
-                  </p>
                 </div>
               </motion.div>
             ))}
           </motion.div>
-          {/* Custom Navigation Buttons (below container) */}
+          {/* Custom Navigation Buttons (below container) - Changed to squared buttons */}
           <div className="flex justify-center mt-8 space-x-3">
             <motion.button
               onClick={goToPrev}
-              className="w-12 h-12 bg-[#F81A27] text-white flex items-center justify-center transition-colors duration-200 rounded-full"
+              className="w-12 h-12 bg-[#F81A27] text-white flex items-center justify-center transition-colors duration-200 rounded-lg"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               aria-label="Previous Team Member"
@@ -307,7 +307,7 @@ const TeamSection = () => {
 
             <motion.button
               onClick={goToNext}
-              className="w-12 h-12 bg-[#F81A27] text-white flex items-center justify-center transition-colors duration-200 rounded-full"
+              className="w-12 h-12 bg-[#F81A27] text-white flex items-center justify-center transition-colors duration-200 rounded-lg"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               aria-label="Next Team Member"
@@ -538,6 +538,62 @@ const AchievementsSection = () => {
   );
 };
 
+
+// MODIFIED: BorderFollowingButton to implement Flip-Fade effect
+const BorderFollowingButton = ({ children, onClick }) => {
+  const buttonVariants = {
+    rest: {
+      scale: 1,
+      rotateX: 0,
+      backgroundColor: "#F81A27", // Initial Color: Red
+      transition: { duration: 0.4, ease: [0.65, 0, 0.35, 1] }, // Custom ease for smooth flip
+    },
+    hover: {
+      scale: 1.05,
+      rotateX: 5, // Slight tilt for 3D flip illusion
+      backgroundColor: "#141414", // Hover Color: Dark Grey
+      transition: { duration: 0.4, ease: [0.65, 0, 0.35, 1] },
+    },
+    tap: {
+      scale: 0.95,
+      rotateX: 0,
+    },
+  };
+
+  // Text variants for a slight movement inside the flip
+  const textVariants = {
+    rest: { y: 0, color: "#ffffff", transition: { duration: 0.4 } },
+    hover: { y: -2, color: "#ffffff", transition: { duration: 0.4 } },
+  };
+
+
+  return (
+    <motion.button
+      className="relative px-8 sm:px-10 py-3 sm:py-4 text-white font-semibold rounded-lg transition-all shadow-lg shadow-[#F81A27]/20 text-sm sm:text-base overflow-hidden"
+      variants={buttonVariants}
+      initial="rest"
+      whileHover="hover"
+      whileTap="tap"
+      onClick={onClick}
+      style={{
+        // Set perspective for the 3D effect to work
+        perspective: "1000px",
+        // Ensure the rotation origin is centered
+        transformStyle: "preserve-3d",
+        border: '1px solid #F81A27', // Use a solid border that won't show the initial background
+      }}
+    >
+      <motion.span 
+        className="relative z-10 flex items-center justify-center"
+        variants={textVariants}
+      >
+        {children}
+      </motion.span>
+    </motion.button>
+  );
+};
+
+
 // MODIFIED: Accepts onNavigate prop
 const CTASection = ({ onNavigate }) => {
   const sectionRef = useRef(null);
@@ -571,16 +627,10 @@ const CTASection = ({ onNavigate }) => {
             Ready to innovate? Whether you're a startup or an enterprise, Blitz Innovation is here to bring your ideas to life through technology that performs, scales, and inspires.
           </p>
 
-          <motion.button
-            className="px-8 sm:px-10 py-3 sm:py-4 bg-[#F81A27] text-white font-semibold rounded-lg transition-all duration-300 shadow-lg shadow-[#F81A27]/20 text-sm sm:text-base"
-            whileHover={{ scale: 1.05, backgroundColor: "#C70008" }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleNavigation} // Call the navigate function
-          >
+          {/* REPLACED BUTTON WITH NEW ANIMATION COMPONENT */}
+          <BorderFollowingButton onClick={handleNavigation}>
             Get in Touch →
-          </motion.button>
-
-
+          </BorderFollowingButton>
         </div>
       </div>
     </motion.section>

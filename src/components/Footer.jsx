@@ -46,7 +46,7 @@ export default function Footer() {
           <motion.img
             src={logo}
             alt="Blitz Innovation Logo"
-            className="w-[150px] cursor-pointer select-none"
+            className="w-[130px] cursor-pointer select-none"
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, ease: "easeOut" }}

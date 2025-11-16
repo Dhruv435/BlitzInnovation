@@ -2,32 +2,77 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Footer from "../components/Footer";
 
-// Custom Button Component
+// Custom Button Component (FIXED for clean hover animation)
 const AnimatedButton = ({ text, onClick }) => {
+
+  const buttonVariants = {
+    // Initial state (rest)
+    rest: {
+      color: "rgb(255, 255, 255)", // White text
+      borderColor: "rgb(255, 255, 255)", // White border
+    },
+    // Hover state
+    hover: {
+      color: "rgb(0, 0, 0)", // Black text
+      borderColor: "rgb(255, 255, 255)", // White border
+      // Transition the color immediately after the background slide starts
+      transition: {
+        color: { duration: 0.2, delay: 0.15 },
+        borderColor: { duration: 0.2 },
+      },
+    },
+  };
+
+  const backgroundVariants = {
+    // Initial state: Hidden off-screen (top-left)
+    rest: {
+      backgroundColor: "#37474f", // Dark Blue-Grey
+      transform: "translateX(-100%) translateY(-100%)",
+      transition: {
+        type: "tween",
+        duration: 0.5,
+        ease: [0.2, 1, 0.3, 1]
+      }
+    },
+    // Hover state: Slide in to cover the whole button (now looks white due to button body)
+    hover: {
+      backgroundColor: "white", // Final background color for the slider div
+      transform: "translateX(0%) translateY(0%)",
+      transition: {
+        type: "tween",
+        duration: 0.5,
+        ease: [0.2, 1, 0.3, 1]
+      }
+    },
+  };
+
   return (
     <motion.button
-      className="button relative w-[170px] h-12 p-0 border-3 border-white text-white font-poppins text-base overflow-hidden transition-colors duration-300 hover:text-black hover:border-white mt-4"
+      className="button relative w-[170px] h-12 p-0 border-3 border-white font-poppins text-base overflow-hidden mt-4"
+      variants={buttonVariants} // Apply color variants here
       whileHover="hover"
       initial="rest"
       onClick={onClick}
+      style={{
+        // Set initial color and border styles directly or via Tailwind utilities (if possible)
+        color: 'white',
+        borderWidth: '3px',
+        borderStyle: 'solid',
+        borderColor: 'white',
+      }}
     >
+      {/* Text layer - z-20 ensures it's above the slider */}
       <span className="relative z-20 text-center block leading-10">
         {text}
       </span>
-      {/* Background slide-in effect */}
+      
+      {/* Background slide-in effect - z-10 for layering */}
       <motion.div
-        className="absolute inset-0 z-10 bg-[#37474f] transition-transform duration-500"
-        variants={{
-          rest: {
-            backgroundColor: "#37474f",
-            transform: "translateX(-100%) translateY(-100%)",
-          },
-          hover: {
-            backgroundColor: "white",
-            transform: "translateX(0%) translateY(0%)",
-          },
-        }}
-        transition={{ type: "tween", duration: 0.5, ease: [0.2, 1, 0.3, 1] }}
+        className="absolute inset-0 z-10"
+        variants={backgroundVariants}
+        // Setting initial backgroundColor to the initial fill color of the button (dark)
+        // Then, on hover, it slides in and changes to white, overriding the background.
+        // We ensure the outer button itself has a transparent background to let the slider show through cleanly.
       />
     </motion.button>
   );

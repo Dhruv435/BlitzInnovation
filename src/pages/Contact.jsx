@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
-import Footer from "../components/Footer";
+import { Twitter, Instagram, Linkedin, Send } from "lucide-react";
 
+// --- ANIMATION VARIANTS ---
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -16,7 +16,9 @@ const itemVariants = {
   visible: { y: 0, opacity: 1, transition: { duration: 0.4, ease: "easeOut" } },
 };
 
-const FormInput = ({ label, type = "text", isTextArea = false }) => (
+// --- HELPER COMPONENTS ---
+
+const FormInput = ({ label, type = "text", isTextArea = false, value, onChange, name }) => (
   <motion.div variants={itemVariants} className="w-full">
     {isTextArea ? (
       <textarea
@@ -24,6 +26,9 @@ const FormInput = ({ label, type = "text", isTextArea = false }) => (
         className="w-full bg-transparent border-t-0 border-l-0 border-r-0 border-b border-gray-500 focus:border-b-white py-3 text-white placeholder-gray-300 focus:outline-none transition duration-300 resize-none"
         placeholder={label}
         aria-label={label}
+        value={value}
+        onChange={onChange}
+        name={name}
       />
     ) : (
       <input
@@ -31,12 +36,106 @@ const FormInput = ({ label, type = "text", isTextArea = false }) => (
         className="w-full bg-transparent border-t-0 border-l-0 border-r-0 border-b border-gray-500 focus:border-b-white py-3 text-white placeholder-gray-300 focus:outline-none transition duration-300"
         placeholder={label}
         aria-label={label}
+        value={value}
+        onChange={onChange}
+        name={name}
       />
     )}
   </motion.div>
 );
 
+// --- FLIP BUTTON COMPONENT ---
+const FlipButton = ({ text, isSending, onClick, disabled }) => {
+  const buttonVariants = {
+    initial: {
+      backgroundColor: "#F81A27",
+      color: "#FFFFFF",
+    },
+    hover: {
+      backgroundColor: "#121212",
+      color: "#FFFFFF",
+      scale: 1.02,
+      rotateX: 5,
+      transition: {
+        duration: 0.4,
+        ease: [0.65, 0, 0.35, 1],
+      },
+    },
+    tap: {
+      scale: 0.98,
+      rotateX: 0,
+    },
+    disabled: {
+      backgroundColor: "#3a3a3a",
+      color: "#999999",
+      scale: 1,
+      rotateX: 0,
+      transition: { duration: 0.3 },
+    },
+  };
+
+  return (
+    <motion.button
+      type="submit"
+      disabled={disabled || isSending}
+      onClick={onClick}
+      variants={buttonVariants}
+      initial="initial"
+      whileHover={disabled || isSending ? "disabled" : "hover"}
+      whileTap={disabled || isSending ? "disabled" : "tap"}
+      animate={disabled || isSending ? "disabled" : "initial"}
+      className="py-3 px-8 text-sm font-semibold uppercase tracking-widest transition duration-300 flex items-center justify-center relative overflow-hidden"
+      style={{
+        borderRadius: "0px",
+        perspective: "1000px",
+        transformStyle: "preserve-3d",
+        minWidth: "150px",
+      }}
+    >
+      <AnimatePresence mode="wait">
+        {isSending ? (
+          <motion.span
+            key="sending"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.3 }}
+          >
+            Sending...
+          </motion.span>
+        ) : (
+          <motion.span
+            key="send"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.3 }}
+            className="flex items-center gap-2"
+          >
+            {text} <Send className="w-4 h-4" />
+          </motion.span>
+        )}
+      </AnimatePresence>
+    </motion.button>
+  );
+};
+
+// --- FOOTER COMPONENT ---
+const Footer = () => (
+  <div className="bg-black text-white py-6 text-center">
+    <p className="text-sm">© 2024 Blitz Innovations. All rights reserved.</p>
+  </div>
+);
+
+// --- MAIN COMPONENT ---
+
 export default function ContactUs() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
   const [isSending, setIsSending] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const [mapZ, setMapZ] = useState(0);
@@ -47,7 +146,6 @@ export default function ContactUs() {
   }, []);
 
   useEffect(() => {
-    // Smoothly delay z-index change until opacity transitions complete
     if (showMap) {
       setTimeout(() => {
         setMapZ(10);
@@ -61,21 +159,108 @@ export default function ContactUs() {
     }
   }, [showMap]);
 
-  const handleSubmit = (e) => {
+  // Form Validation Logic
+  const validateEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const isFormValid =
+    formData.name.trim() !== "" &&
+    validateEmail(formData.email) &&
+    formData.phone.replace(/\s/g, '').length === 10 &&
+    formData.message.trim() !== "";
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    
+    if (name === "phone") {
+      const numericValue = value.replace(/\D/g, '');
+      const limitedValue = numericValue.slice(0, 10);
+      let formattedValue = limitedValue;
+      if (limitedValue.length > 5) {
+        formattedValue = limitedValue.slice(0, 5) + ' ' + limitedValue.slice(5);
+      }
+      setFormData((prev) => ({ ...prev, [name]: formattedValue }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  // ------------------------------
+  // FIXED EMAILJS FUNCTION
+  // ------------------------------
+  const sendEmail = async (data) => {
+    // IMPORTANT: Replace these with your actual EmailJS credentials
+    const SERVICE_ID = "service_blitz123";
+    const TEMPLATE_ID = "template_contact";
+    const PUBLIC_KEY = "YOUR_ACTUAL_PUBLIC_KEY_HERE"; // ← Replace this!
+    
+    try {
+      const response = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          service_id: SERVICE_ID,
+          template_id: TEMPLATE_ID,
+          user_id: PUBLIC_KEY, // EmailJS uses 'user_id' not 'public_key'
+          template_params: {
+            from_name: data.name,
+            from_email: data.email,
+            phone: data.phone,
+            message: data.message,
+            to_email: "blitzinnovations@gmail.com",
+          },
+        }),
+      });
+
+      const responseData = await response.text();
+      
+      if (response.ok) {
+        return { success: true };
+      } else {
+        console.error("EmailJS Response:", responseData);
+        throw new Error(`EmailJS error: ${responseData}`);
+      }
+    } catch (error) {
+      console.error("EmailJS error:", error);
+      throw error;
+    }
+  };
+
+  // Submit Handler
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isFormValid || isSending) return;
+
     setIsSending(true);
-    setTimeout(() => {
+
+    try {
+      const result = await sendEmail(formData);
+      if (result.success) {
+        alert("Message sent successfully! We'll get back to you soon.");
+        setFormData({ name: "", email: "", phone: "", message: "" });
+      }
+    } catch (error) {
+      alert("Failed to send message. Please try again later or email us directly at blitzinnovations@gmail.com");
+    } finally {
       setIsSending(false);
-      console.log("Form submitted successfully!");
-    }, 2000);
+    }
   };
 
   const RAJKOT_COORDS = "22.3072,70.8022";
   const MAP_ZOOM = 12;
-  const mapUrl = `https://maps.google.com/maps?q=${RAJKOT_COORDS}&hl=en&z=${MAP_ZOOM}&output=embed`;
+  const mapUrl = `https://maps.google.com/maps?q=${RAJKOT_COORDS}&hl=en&z=${MAP_ZOOM}&output=embed`; 
 
   const MAIN_BG = "#121212";
   const TEXT_COLOR = "#FFFFFF";
+  
+  const SOCIAL_LINKS = [
+    { Icon: Twitter, href: "https://x.com/BlitzInnovation", label: "Twitter (X)" },
+    { Icon: Instagram, href: "https://www.instagram.com/blitz_innovations?igsh=MTFoZnM5MmR0dzlhMA==", label: "Instagram" },
+    { Icon: Linkedin, href: "https://www.linkedin.com/company/blitz-innovations/", label: "LinkedIn" },
+  ];
 
   return (
     <>
@@ -83,7 +268,6 @@ export default function ContactUs() {
         className="min-h-screen relative flex flex-col items-center justify-start pt-12 pb-24 font-sans overflow-hidden"
         style={{ backgroundColor: MAIN_BG }}
       >
-        {/* === MAP BACKGROUND === */}
         <motion.div
           key="map-layer"
           className="absolute inset-0 map-wrapper"
@@ -113,7 +297,6 @@ export default function ContactUs() {
           ></iframe>
         </motion.div>
 
-        {/* === GRADIENT OVERLAY === */}
         <motion.div
           className="absolute inset-0 gradient-overlay pointer-events-none"
           animate={{
@@ -126,7 +309,6 @@ export default function ContactUs() {
           }}
         ></motion.div>
 
-        {/* === MAIN CONTENT === */}
         <motion.div
           className="relative max-w-7xl w-full mx-auto p-4 sm:p-10"
           variants={containerVariants}
@@ -142,7 +324,8 @@ export default function ContactUs() {
           }}
         >
           <div className="flex flex-col lg:flex-row justify-between">
-            {/* === LEFT CONTACT INFO === */}
+            
+            {/* LEFT CONTACT INFO */}
             <div className="w-full lg:w-2/3 xl:w-7/12 space-y-10 lg:space-y-14 mb-8 lg:mb-0 text-white">
               <motion.h1
                 variants={itemVariants}
@@ -151,20 +334,20 @@ export default function ContactUs() {
                 Contact <span className="text-red-500">us</span>
               </motion.h1>
 
-              {/* Address Section */}
               <div className="flex flex-col sm:flex-row gap-8 sm:gap-10">
                 <motion.div variants={itemVariants} className="space-y-3">
                   <p className="text-xs uppercase tracking-widest text-red-500 font-bold">
-                  ADDRESS
+                    ADDRESS
                   </p>
-                  <p className="text-sm font-light">Rajkot</p>
-                  <p className="text-sm font-light">Rajkot</p>
-                  <p className="text-sm font-light">Rajkot, Gujarat, India</p>
+                  <p className="text-sm font-light">604 Ceramic Empire,</p>
+                  <p className="text-sm font-light">Near New Indian Oil Petrol Pump,</p>
+                  <p className="text-sm font-light">Halvad–Ghuntu Road, Mahendranagar Chokdi,</p>
+                  <p className="text-sm font-light">Morbi – 363642</p>
                 </motion.div>
 
                 <motion.div variants={itemVariants} className="space-y-3">
                   <p className="text-xs uppercase tracking-widest text-red-500 font-bold">
-                  CONTACTS
+                    CONTACTS
                   </p>
                   <p className="text-sm font-light">blitzinnovations@gmail.com </p>
                   <p className="text-sm font-light">+91  63532 74199 </p>
@@ -172,21 +355,22 @@ export default function ContactUs() {
                 </motion.div>
               </div>
 
-              {/* Follow Us Section */}
+              {/* Follow Us */}
               <motion.div
                 variants={itemVariants}
                 className="flex flex-wrap items-center gap-4 sm:gap-6 mt-6"
               >
-                <p className="text-sm uppercase tracking-widest text-white">
-                  — follow us
-                </p>
-                {[Facebook, Twitter, Instagram, Linkedin].map((Icon, i) => (
+                <p className="text-sm uppercase tracking-widest text-white">— follow us</p>
+                {SOCIAL_LINKS.map(({ Icon, href, label }, i) => (
                   <motion.a
                     key={i}
-                    href="#"
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     whileHover={{ scale: 1.1 }}
                     transition={{ duration: 0.2 }}
-                    className="text-white hover:text-gray-400 transition"
+                    className="text-white hover:text-red-500 transition"
+                    aria-label={`Follow us on ${label}`}
                   >
                     <Icon className="w-5 h-5" />
                   </motion.a>
@@ -194,7 +378,7 @@ export default function ContactUs() {
               </motion.div>
             </div>
 
-            {/* === RIGHT FORM === */}
+            {/* RIGHT FORM */}
             <motion.form
               onSubmit={handleSubmit}
               className="w-full mt-10 lg:mt-[100px] lg:ml-8 lg:w-2/5 xl:w-5/12 space-y-6"
@@ -212,26 +396,18 @@ export default function ContactUs() {
                 FEEDBACK FORM
               </motion.p>
 
-              <FormInput label="Name" type="text" />
-              <FormInput label="E-mail" type="email" />
-              <FormInput label="Phone" type="tel" />
-              <FormInput label="Message" isTextArea />
+              <FormInput label="Name" type="text" value={formData.name} onChange={handleChange} name="name" />
+              <FormInput label="E-mail" type="email" value={formData.email} onChange={handleChange} name="email" />
+              <FormInput label="Phone" type="text" value={formData.phone} onChange={handleChange} name="phone" />
+              <FormInput label="Message" isTextArea value={formData.message} onChange={handleChange} name="message" />
 
               <div className="flex justify-end items-center pt-4">
-                <motion.button
-                  type="submit"
-                  disabled={isSending}
-                  whileHover={{ scale: isSending ? 1 : 1.02 }}
-                  whileTap={{ scale: isSending ? 1 : 0.98 }}
-                  className={`py-3 px-8 text-sm font-semibold uppercase tracking-widest transition duration-300 ${
-                    isSending
-                      ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-                      : "bg-white text-black hover:bg-gray-300"
-                  }`}
-                  style={{ borderRadius: "0px" }}
-                >
-                  {isSending ? "Sending..." : "Send Message"}
-                </motion.button>
+                <FlipButton 
+                  text="Send" 
+                  isSending={isSending} 
+                  onClick={handleSubmit}
+                  disabled={!isFormValid}
+                />
               </div>
             </motion.form>
           </div>
@@ -240,26 +416,24 @@ export default function ContactUs() {
         {/* PAGE LABEL */}
         <div
           className="absolute bottom-4 right-10 text-white text-xs opacity-60 hidden sm:block"
-          style={{
-            zIndex: contentZ,
-          }}
+          style={{ zIndex: contentZ }}
         >
           / 28
           <p className="mt-1">Contact Us</p>
         </div>
 
-        {/* === FIXED FIND/BACK BUTTON === */}
+        {/* FIND / BACK BUTTON */}
         <motion.button
           onClick={() => setShowMap(!showMap)}
           animate={{
             opacity: [0.8, 1],
-            backgroundColor: showMap ? "#3a3a3a" : "#2b2b2b",
+            backgroundColor: showMap ? "#3a3a3a" : "#C70008",
           }}
           transition={{
             duration: 0.6,
             ease: "easeInOut",
           }}
-          whileHover={{ opacity: 1, backgroundColor: "#4a4a4a" }}
+          whileHover={{ opacity: 1, backgroundColor: showMap ? "#4a4a4a" : "#F81A27" }}
           whileTap={{ scale: 0.97 }}
           className="fixed bottom-0 left-0 w-[65px] h-[65px] flex items-center justify-center text-white text-sm font-semibold uppercase tracking-widest transition duration-300"
           style={{
