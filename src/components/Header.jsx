@@ -44,7 +44,7 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
   ];
 
   const shareItems = [
-    { icon: <FaInstagram size={20} />, label: "Instagram", url: "https://www.instagram.com/blitz_innovations?igsh=MTFoZnM5MmR0dzlhMA==" },
+    { icon: <FaInstagram size={20} />, label: "Instagram", url: "https://www.instagram.com/blitz.innovation?igsh=MTZ6aW9heTFmOWkxag==" },
     { icon: <FaLinkedinIn size={20} />, label: "LinkedIn", url: "https://www.linkedin.com/company/blitz-innovations/" },
     { icon: <FaTwitter size={20} />, label: "Twitter", url: "https://x.com/BlitzInnovation" },
     { icon: <FaWhatsapp size={20} />, label: "WhatsApp", url: "https://wa.me/916353274199?text=hello%20blitz" },

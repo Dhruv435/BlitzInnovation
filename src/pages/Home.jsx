@@ -16,34 +16,35 @@ export default function Home({ isTransitioning, currentSlide, onSlideChange, onN
   const [animateLearnMore, setAnimateLearnMore] = useState(false);
 
   const heroData = [
-    {
-      id: 1,
-      title:
-        ' <span style="color:#D7001A;">Design</span> the Future.<br/>Build with <span style="color:#1B1716;">Blitz.</span>',
-      desc: "We craft elegant digital experiences that merge technology, creativity, and precision — bringing ideas to life with clean design and powerful performance.",
-      image: hero1,
-    },
-    {
-      id: 2,
-      title:
-        'Empowering <span style="color:#1B1716;">Vision.</span><br/><span style="color:#D7001A;">Code</span> Beyond Limits.',
-      desc: "From ideas to execution, we shape brands and build seamless digital products with pixel-perfect precision.",
-      image: hero2,
-    },
-    {
-      id: 3,
-      title: '<span style="color:#D7001A;">Innovate.</span> Create. Inspire.',
-      desc: "Experience innovation with purpose – every design and line of code reflects the art of simplicity and sophistication.",
-      image: hero3,
-    },
-    {
-      id: 4,
-      title:
-        '<span style="color:#D7001A;">Elevate</span> Your <span style="color:#1B1716;">Digital</span> Presence.',
-      desc: "Transform your business with digital craftsmanship that blends technology, art, and emotion effortlessly.",
-      image: hero4,
-    },
-  ];
+  {
+    id: 1,
+    title:
+      'Design with Purpose.<br/>Build for Impact.',
+    desc: "Where ideas turn into structured, intelligent designs — crafted with clarity, precision, and creativity.",
+    image: hero1,
+  },
+  {
+    id: 2,
+    title:
+      'Strong Partnerships.<br/>Bold Solutions.',
+    desc: "We collaborate with visionaries to create reliable, scalable, and high-performance digital products.",
+    image: hero2,
+  },
+  {
+    id: 3,
+    title:
+      'Teamwork that Drives <br/>Innovation.',
+    desc: "A focused team turning complex challenges into seamless, elegant software experiences.",
+    image: hero3,
+  },
+  {
+    id: 4,
+    title:
+      'Think. Build.<br/>Transform.',
+    desc: "From concept to code — we craft digital excellence with deep focus and modern engineering.",
+    image: hero4,
+  },
+];
 
   const [current, setCurrent] = useState(0);
   const [isInitialLoad, setIsInitialLoad] = useState(true);

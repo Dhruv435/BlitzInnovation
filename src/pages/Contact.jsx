@@ -249,8 +249,9 @@ export default function ContactUs() {
   
   const SOCIAL_LINKS = [
     { Icon: Twitter, href: "https://x.com/BlitzInnovation", label: "Twitter (X)" },
-    { Icon: Instagram, href: "https://www.instagram.com/blitz_innovations?igsh=MTFoZnM5MmR0dzlhMA==", label: "Instagram" },
+    { Icon: Instagram, href: "https://www.instagram.com/blitz.innovation?igsh=MTZ6aW9heTFmOWkxag==", label: "Instagram" },
     { Icon: Linkedin, href: "https://www.linkedin.com/company/blitz-innovations/", label: "LinkedIn" },
+    
   ];
 
   return (

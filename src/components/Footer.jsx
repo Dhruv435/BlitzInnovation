@@ -14,11 +14,10 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   const socials = [
-    { icon: <FaInstagram size={18} />, href: "#" },
-    { icon: <FaLinkedinIn size={18} />, href: "#" },
-    { icon: <FaFacebookF size={18} />, href: "#" },
-    { icon: <FaTwitter size={18} />, href: "#" },
-    { icon: <FaWhatsapp size={18} />, href: "#" },
+    { icon: <FaInstagram size={18} />, href: "https://www.instagram.com/blitz.innovation?igsh=MTZ6aW9heTFmOWkxag==" },
+    { icon: <FaLinkedinIn size={18} />, href: "https://www.linkedin.com/company/blitz-innovations/" },
+    { icon: <FaTwitter size={18} />, href: "https://x.com/BlitzInnovation" },
+    { icon: <FaWhatsapp size={18} />, href: "https://wa.me/916353274199?text=hello%20blitz" },
   ];
 
   const services = [
@@ -111,13 +110,13 @@ export default function Footer() {
             Contact
           </h3>
           <p className="text-gray-400 text-sm leading-relaxed">
-            blitzinnovation@gmail.com
+            blitzinnovations@gmail.com
           </p>
           <p className="text-gray-400 text-sm leading-relaxed">
-            +91 98765 43210
+            +91 63532 74199
           </p>
           <p className="text-gray-400 text-sm leading-relaxed">
-            Rajkot, Gujarat, India
+            Morbi, Gujarat, India
           </p>
         </div>
       </motion.div>
@@ -137,7 +136,7 @@ export default function Footer() {
         whileInView={{ opacity: 1 }}
         transition={{ duration: 1.5, delay: 0.3 }}
       >
-        © {year} <span className="text-white font-medium">Blitz Digital</span> — All rights reserved.
+        © {year} <span className="text-white font-medium">Blitz Innovations</span> — All rights reserved.
       </motion.div>
 
       {/* Ambient Glow */}
