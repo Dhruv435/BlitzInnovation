@@ -24,6 +24,7 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
   const [menuOpen, setMenuOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
   const [isChanging, setIsChanging] = useState(false);
+  
   const location = useLocation();
   const navigate = useNavigate();
   const currentPath = location.pathname;
@@ -151,52 +152,52 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
                   onClick={handleMenuClick}
                   className="btn-flip-menu focus:outline-none w-full h-full flex items-center justify-center"
                 >
-                  {/* --- MODIFIED LOGIC START: Instant switch on close/open --- */}
+                  {/* --- MENU LOGIC START --- */}
                   {menuOpen ? (
-                    // State: Menu is OPEN (Show X icon immediately, no flip logic)
+                    // State: Menu is OPEN (Show X icon immediately)
                     <X className="text-[#1B1716]" size={26} />
                   ) : (
-                    // State: Menu is CLOSED (Enable flip animation on hover)
+                    // State: Menu is CLOSED (Enable flip animation on hover for desktop, direct show for mobile)
                     <>
+                      {/* Hamburger Icon */}
                       <div className="btn-flip-front">
-                        {/* Hamburger Icon */}
                         <div className="flex flex-col justify-between w-[18px] h-[18px]">
                           <div className="bg-[#1B1716] h-[3px] w-1/2 rounded"></div>
                           <div className="bg-[#1B1716] h-[2px] rounded"></div>
                           <div className="bg-[#1B1716] h-[3px] w-1/2 rounded self-end"></div>
                         </div>
                       </div>
+                      {/* Text: MENU */}
                       <div className="btn-flip-back">
-                        {/* Text: MENU */}
                         <span className="text-[#fff] font-semibold text-xs">MENU</span>
                       </div>
                     </>
                   )}
-                  {/* --- MODIFIED LOGIC END --- */}
+                  {/* --- MENU LOGIC END --- */}
                 </button>
               ) : (
                 <button
                   onClick={handleShareClick}
                   className="btn-flip-share focus:outline-none w-full h-full flex items-center justify-center"
                 >
-                  {/* --- MODIFIED LOGIC START: Instant switch on close/open --- */}
+                  {/* --- SHARE LOGIC START --- */}
                   {shareOpen ? (
-                    // State: Share is OPEN (Show X icon immediately, no flip logic)
+                    // State: Share is OPEN (Show X icon immediately)
                     <X size={26} className="text-[#1B1716]" />
                   ) : (
-                    // State: Share is CLOSED (Enable flip animation on hover)
+                    // State: Share is CLOSED (Enable flip animation on hover for desktop, direct show for mobile)
                     <>
+                      {/* Text: SHARE */}
                       <div className="btn-flip-front">
-                        {/* Text: SHARE */}
                         <span style={{ color: "#1B1716", fontWeight: "600", fontSize: "13px" }}>SHARE</span>
                       </div>
+                      {/* Icon: Send */}
                       <div className="btn-flip-back">
-                        {/* Icon: Send */}
                         <Send size={24} className="text-[#fff]" />
                       </div>
                     </>
                   )}
-                  {/* --- MODIFIED LOGIC END --- */}
+                  {/* --- SHARE LOGIC END --- */}
                 </button>
               )}
             </div>
@@ -308,6 +309,26 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
               width: 140px !important;
               height: 55px !important;
             }
+            /* ✅ MOBILE ONLY: Disable flip state transitions */
+            .btn-flip-menu:hover .btn-flip-front,
+            .btn-flip-menu:active .btn-flip-front,
+            .btn-flip-share:hover .btn-flip-front,
+            .btn-flip-share:active .btn-flip-front {
+              /* Keep front face visible and rotated normally */
+              transform: translateY(0) rotateX(0);
+              opacity: 1;
+              transition: none; /* Disable transition for immediate change */
+            }
+
+            .btn-flip-menu:hover .btn-flip-back,
+            .btn-flip-menu:active .btn-flip-back,
+            .btn-flip-share:hover .btn-flip-back,
+            .btn-flip-share:active .btn-flip-back {
+              /* Keep back face hidden and rotated away */
+              transform: translateY(-50%) rotateX(90deg);
+              opacity: 0;
+              transition: none; /* Disable transition for immediate change */
+            }
           }
 
           /* Flip Animation Styles for Menu and Share Buttons */
@@ -340,35 +361,41 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
             background: #141414;
           }
 
-          /* --- REVISED: Flip is only active when the button is in its default (non-open) state --- */
+          /* --- Desktop Flip Logic (RE-WRAPPED for Desktop ONLY) --- */
 
           /* Menu Button Flip */
-          .btn-flip-menu:hover .btn-flip-front,
-          .btn-flip-menu:active .btn-flip-front {
-            transform: translateY(50%) rotateX(90deg);
-            opacity: 0;
-          }
+          /* ✅ Only apply hover/active for desktop to allow mobile CSS override to take over */
+          @media (min-width: 641px) {
+            .btn-flip-menu:hover .btn-flip-front,
+            .btn-flip-menu:active .btn-flip-front {
+              transform: translateY(50%) rotateX(90deg);
+              opacity: 0;
+            }
 
-          .btn-flip-menu:hover .btn-flip-back,
-          .btn-flip-menu:active .btn-flip-back {
-            transform: translateY(0) rotateX(0);
-            opacity: 1;
+            .btn-flip-menu:hover .btn-flip-back,
+            .btn-flip-menu:active .btn-flip-back {
+              transform: translateY(0) rotateX(0);
+              opacity: 1;
+            }
           }
 
           /* Share Button Flip */
-          .btn-flip-share:hover .btn-flip-front,
-          .btn-flip-share:active .btn-flip-front {
-            transform: translateY(50%) rotateX(90deg);
-            opacity: 0;
-          }
+          /* ✅ Only apply hover/active for desktop to allow mobile CSS override to take over */
+          @media (min-width: 641px) {
+            .btn-flip-share:hover .btn-flip-front,
+            .btn-flip-share:active .btn-flip-front {
+              transform: translateY(50%) rotateX(90deg);
+              opacity: 0;
+            }
 
-          .btn-flip-share:hover .btn-flip-back,
-          .btn-flip-share:active .btn-flip-back {
-            transform: translateY(0) rotateX(0);
-            opacity: 1;
+            .btn-flip-share:hover .btn-flip-back,
+            .btn-flip-share:active .btn-flip-back {
+              transform: translateY(0) rotateX(0);
+              opacity: 1;
+            }
           }
           
-          /* Flip Animation Styles for Arrow Buttons */
+          /* Flip Animation Styles for Arrow Buttons (No Change) */
           .btn-flip-arrow {
             position: relative;
             perspective: 1000px;

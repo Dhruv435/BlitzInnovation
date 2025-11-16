@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Twitter, Instagram, Linkedin, Send } from "lucide-react";
+import Footer from "../components/Footer";
 
 // --- ANIMATION VARIANTS ---
 const containerVariants = {
@@ -120,12 +121,7 @@ const FlipButton = ({ text, isSending, onClick, disabled }) => {
   );
 };
 
-// --- FOOTER COMPONENT ---
-const Footer = () => (
-  <div className="bg-black text-white py-6 text-center">
-    <p className="text-sm">© 2024 Blitz Innovations. All rights reserved.</p>
-  </div>
-);
+
 
 // --- MAIN COMPONENT ---
 
@@ -187,44 +183,39 @@ export default function ContactUs() {
   };
 
   // ------------------------------
-  // FIXED EMAILJS FUNCTION
+  // WEB3FORMS IMPLEMENTATION (Free & No Setup Required)
   // ------------------------------
   const sendEmail = async (data) => {
-    // IMPORTANT: Replace these with your actual EmailJS credentials
-    const SERVICE_ID = "service_blitz123";
-    const TEMPLATE_ID = "template_contact";
-    const PUBLIC_KEY = "YOUR_ACTUAL_PUBLIC_KEY_HERE"; // ← Replace this!
-    
     try {
-      const response = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+      const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { 
+        headers: {
           "Content-Type": "application/json",
+          "Accept": "application/json",
         },
         body: JSON.stringify({
-          service_id: SERVICE_ID,
-          template_id: TEMPLATE_ID,
-          user_id: PUBLIC_KEY, // EmailJS uses 'user_id' not 'public_key'
-          template_params: {
-            from_name: data.name,
-            from_email: data.email,
-            phone: data.phone,
-            message: data.message,
-            to_email: "blitzinnovations@gmail.com",
-          },
+          access_key: "067401e6-df31-46f1-9059-85504349082d", // Free public key for testing
+          subject: "New Contact Form Submission from Blitz Innovations Website",
+          from_name: data.name,
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          message: data.message,
+          to_email: "blitzinnovations@gmail.com",
+          replyto: data.email,
         }),
       });
 
-      const responseData = await response.text();
+      const result = await response.json();
       
-      if (response.ok) {
+      if (result.success) {
         return { success: true };
       } else {
-        console.error("EmailJS Response:", responseData);
-        throw new Error(`EmailJS error: ${responseData}`);
+        console.error("Web3Forms Error:", result);
+        throw new Error(result.message || "Failed to send email");
       }
     } catch (error) {
-      console.error("EmailJS error:", error);
+      console.error("Email sending error:", error);
       throw error;
     }
   };
