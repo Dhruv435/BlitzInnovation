@@ -151,44 +151,52 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
                   onClick={handleMenuClick}
                   className="btn-flip-menu focus:outline-none w-full h-full flex items-center justify-center"
                 >
-                  <div className="btn-flip-front">
-                    {!menuOpen ? (
-                      <div className="flex flex-col justify-between w-[18px] h-[18px]">
-                        <div className="bg-[#1B1716] h-[3px] w-1/2 rounded"></div>
-                        <div className="bg-[#1B1716] h-[2px] rounded"></div>
-                        <div className="bg-[#1B1716] h-[3px] w-1/2 rounded self-end"></div>
+                  {/* --- MODIFIED LOGIC START: Instant switch on close/open --- */}
+                  {menuOpen ? (
+                    // State: Menu is OPEN (Show X icon immediately, no flip logic)
+                    <X className="text-[#1B1716]" size={26} />
+                  ) : (
+                    // State: Menu is CLOSED (Enable flip animation on hover)
+                    <>
+                      <div className="btn-flip-front">
+                        {/* Hamburger Icon */}
+                        <div className="flex flex-col justify-between w-[18px] h-[18px]">
+                          <div className="bg-[#1B1716] h-[3px] w-1/2 rounded"></div>
+                          <div className="bg-[#1B1716] h-[2px] rounded"></div>
+                          <div className="bg-[#1B1716] h-[3px] w-1/2 rounded self-end"></div>
+                        </div>
                       </div>
-                    ) : (
-                      <X className="text-[#1B1716]" size={26} />
-                    )}
-                  </div>
-                  <div className="btn-flip-back">
-                    {!menuOpen ? (
-                      <span className="text-[#fff] font-semibold text-xs">MENU</span>
-                    ) : (
-                      <span className="text-[#fff] font-semibold text-xs">CLOSE</span>
-                    )}
-                  </div>
+                      <div className="btn-flip-back">
+                        {/* Text: MENU */}
+                        <span className="text-[#fff] font-semibold text-xs">MENU</span>
+                      </div>
+                    </>
+                  )}
+                  {/* --- MODIFIED LOGIC END --- */}
                 </button>
               ) : (
                 <button
                   onClick={handleShareClick}
                   className="btn-flip-share focus:outline-none w-full h-full flex items-center justify-center"
                 >
-                  <div className="btn-flip-front">
-                    {shareOpen ? (
-                      <X size={26} className="text-[#1B1716]" />
-                    ) : (
-                      <span style={{ color: "#1B1716", fontWeight: "600", fontSize: "13px" }}>SHARE</span>
-                    )}
-                  </div>
-                  <div className="btn-flip-back">
-                    {shareOpen ? (
-                      <span className="text-[#fff] font-semibold text-xs">CLOSE</span>
-                    ) : (
-                      <Send size={24} className="text-[#fff]" />
-                    )}
-                  </div>
+                  {/* --- MODIFIED LOGIC START: Instant switch on close/open --- */}
+                  {shareOpen ? (
+                    // State: Share is OPEN (Show X icon immediately, no flip logic)
+                    <X size={26} className="text-[#1B1716]" />
+                  ) : (
+                    // State: Share is CLOSED (Enable flip animation on hover)
+                    <>
+                      <div className="btn-flip-front">
+                        {/* Text: SHARE */}
+                        <span style={{ color: "#1B1716", fontWeight: "600", fontSize: "13px" }}>SHARE</span>
+                      </div>
+                      <div className="btn-flip-back">
+                        {/* Icon: Send */}
+                        <Send size={24} className="text-[#fff]" />
+                      </div>
+                    </>
+                  )}
+                  {/* --- MODIFIED LOGIC END --- */}
                 </button>
               )}
             </div>
@@ -332,7 +340,7 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
             background: #141414;
           }
 
-          /* --- REVISED: Use :active (for hold/tap) and :hover (for desktop) --- */
+          /* --- REVISED: Flip is only active when the button is in its default (non-open) state --- */
 
           /* Menu Button Flip */
           .btn-flip-menu:hover .btn-flip-front,
@@ -418,8 +426,6 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
               transform: scale(1.1);
             }
           }
-
-          /* --- REMOVED old flip hover rules which were redundant/conflicting --- */
         `}</style>
       </header>
 
