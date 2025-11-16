@@ -332,21 +332,34 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
             background: #141414;
           }
 
-          /* Desktop hover effects only */
-          @media (hover: hover) and (pointer: fine) {
-            .btn-flip-menu:hover .btn-flip-front,
-            .btn-flip-share:hover .btn-flip-front {
-              transform: translateY(50%) rotateX(90deg);
-              opacity: 0;
-            }
+          /* --- REVISED: Use :active (for hold/tap) and :hover (for desktop) --- */
 
-            .btn-flip-menu:hover .btn-flip-back,
-            .btn-flip-share:hover .btn-flip-back {
-              transform: translateY(0) rotateX(0);
-              opacity: 1;
-            }
+          /* Menu Button Flip */
+          .btn-flip-menu:hover .btn-flip-front,
+          .btn-flip-menu:active .btn-flip-front {
+            transform: translateY(50%) rotateX(90deg);
+            opacity: 0;
           }
 
+          .btn-flip-menu:hover .btn-flip-back,
+          .btn-flip-menu:active .btn-flip-back {
+            transform: translateY(0) rotateX(0);
+            opacity: 1;
+          }
+
+          /* Share Button Flip */
+          .btn-flip-share:hover .btn-flip-front,
+          .btn-flip-share:active .btn-flip-front {
+            transform: translateY(50%) rotateX(90deg);
+            opacity: 0;
+          }
+
+          .btn-flip-share:hover .btn-flip-back,
+          .btn-flip-share:active .btn-flip-back {
+            transform: translateY(0) rotateX(0);
+            opacity: 1;
+          }
+          
           /* Flip Animation Styles for Arrow Buttons */
           .btn-flip-arrow {
             position: relative;
@@ -381,18 +394,21 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
             background: #141414;
           }
 
-          /* Desktop hover effects only */
+          /* Arrow Button Flip */
+          .btn-flip-arrow:hover .arrow-flip-front,
+          .btn-flip-arrow:active .arrow-flip-front {
+            transform: translateY(50%) rotateX(90deg);
+            opacity: 0;
+          }
+
+          .btn-flip-arrow:hover .arrow-flip-back,
+          .btn-flip-arrow:active .arrow-flip-back {
+            transform: translateY(0) rotateX(0);
+            opacity: 1;
+          }
+
+          /* Desktop only hover effects */
           @media (hover: hover) and (pointer: fine) {
-            .btn-flip-arrow:hover .arrow-flip-front {
-              transform: translateY(50%) rotateX(90deg);
-              opacity: 0;
-            }
-
-            .btn-flip-arrow:hover .arrow-flip-back {
-              transform: translateY(0) rotateX(0);
-              opacity: 1;
-            }
-
             .menu-item-hover:hover {
               filter: brightness(1.1);
             }
@@ -402,6 +418,8 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
               transform: scale(1.1);
             }
           }
+
+          /* --- REMOVED old flip hover rules which were redundant/conflicting --- */
         `}</style>
       </header>
 
