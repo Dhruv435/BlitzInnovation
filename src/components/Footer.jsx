@@ -1,5 +1,4 @@
 import React from "react";
-// 🎯 FIX: Changed 'BlitzLogo.png' to 'Blitzlogo.png' to match the file structure
 import logo from "../assets/Blitzlogo.png";
 import { motion } from "framer-motion";
 import {
@@ -9,6 +8,7 @@ import {
   FaTwitter,
   FaWhatsapp,
 } from "react-icons/fa";
+import { Link } from "react-router-dom"; // ⭐ Added for navigation
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -27,11 +27,18 @@ export default function Footer() {
     "Custom Software",
   ];
 
-  const links = ["Home", "About", "Services", "Projects", "Blogs", "Contact"];
+  // ⭐ Updated with paths
+  const links = [
+    { name: "Home", path: "/" },
+    { name: "About", path: "/about" },
+    { name: "Services", path: "/services" },
+    { name: "Projects", path: "/projects" },
+    { name: "Blogs", path: "/blogs" },
+    { name: "Contact", path: "/contact" },
+  ];
 
   return (
     <footer className="relative w-full overflow-hidden">
-      {/* Glass background */}
       <div className="absolute inset-0 bg-[rgba(27,23,22,0.8)] backdrop-blur-xl border-t border-[rgba(255,255,255,0.1)] shadow-[0_-8px_32px_rgba(0,0,0,0.4)]"></div>
 
       <motion.div
@@ -40,7 +47,6 @@ export default function Footer() {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
-        {/* Column 1 — Logo & Info */}
         <div className="flex flex-col items-start space-y-4 w-full md:w-1/3">
           <motion.img
             src={logo}
@@ -70,7 +76,6 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Column 2 — Services */}
         <div className="flex flex-col items-start space-y-3 w-full md:w-1/4">
           <h3 className="text-white font-semibold text-lg tracking-wide mb-2">
             Services
@@ -87,24 +92,24 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Column 3 — Quick Links */}
         <div className="flex flex-col items-start space-y-3 w-full md:w-1/4">
           <h3 className="text-white font-semibold text-lg tracking-wide mb-2">
             Quick Links
           </h3>
-          {links.map((link, index) => (
-            <motion.a
-              key={index}
-              href="#"
-              className="text-gray-400 hover:text-white text-sm transition-all duration-300"
-              whileHover={{ x: 6 }}
-            >
-              {link}
-            </motion.a>
+
+          {/* ⭐ ALL LINKS NOW WORK USING <Link> */}
+          {links.map((item, index) => (
+            <motion.div key={index} whileHover={{ x: 6 }}>
+              <Link
+                to={item.path}
+                className="text-gray-400 hover:text-white text-sm transition-all duration-300"
+              >
+                {item.name}
+              </Link>
+            </motion.div>
           ))}
         </div>
 
-        {/* Column 4 — Contact */}
         <div className="flex flex-col items-start space-y-3 w-full md:w-1/4">
           <h3 className="text-white font-semibold text-lg tracking-wide mb-2">
             Contact
@@ -113,7 +118,10 @@ export default function Footer() {
             blitzinnovations@gmail.com
           </p>
           <p className="text-gray-400 text-sm leading-relaxed">
-            +91 63532 74199
+            +91 63532 74199 
+          </p>
+          <p className="text-gray-400 text-sm leading-relaxed">
+            +91 74588 83333
           </p>
           <p className="text-gray-400 text-sm leading-relaxed">
             Morbi, Gujarat, India
@@ -121,7 +129,6 @@ export default function Footer() {
         </div>
       </motion.div>
 
-      {/* Divider */}
       <motion.div
         className="relative z-10 w-[90%] mx-auto h-[1px] bg-[rgba(255,255,255,0.1)]"
         initial={{ width: 0 }}
@@ -129,7 +136,6 @@ export default function Footer() {
         transition={{ duration: 1.2, ease: "easeInOut" }}
       ></motion.div>
 
-      {/* Copyright */}
       <motion.div
         className="relative z-10 py-5 text-center text-gray-400 text-sm font-inter"
         initial={{ opacity: 0 }}
@@ -139,7 +145,6 @@ export default function Footer() {
         © {year} <span className="text-white font-medium">Blitz Innovations</span> — All rights reserved.
       </motion.div>
 
-      {/* Ambient Glow */}
       <div className="absolute top-0 left-1/4 w-[250px] h-[250px] bg-[#F81A27] opacity-10 blur-[100px] rounded-full animate-pulse"></div>
       <div className="absolute bottom-0 right-1/3 w-[200px] h-[200px] bg-[#C70008] opacity-10 blur-[100px] rounded-full animate-pulse delay-700"></div>
     </footer>
