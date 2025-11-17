@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Twitter, Instagram, Linkedin, Send } from "lucide-react";
+import { Twitter, Instagram, Linkedin, Send, Download } from "lucide-react";
 import Footer from "../components/Footer";
 
-// --- ANIMATION VARIANTS ---
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -16,8 +15,6 @@ const itemVariants = {
   hidden: { y: 10, opacity: 0 },
   visible: { y: 0, opacity: 1, transition: { duration: 0.4, ease: "easeOut" } },
 };
-
-// --- HELPER COMPONENTS ---
 
 const FormInput = ({ label, type = "text", isTextArea = false, value, onChange, name }) => (
   <motion.div variants={itemVariants} className="w-full">
@@ -45,7 +42,6 @@ const FormInput = ({ label, type = "text", isTextArea = false, value, onChange, 
   </motion.div>
 );
 
-// --- FLIP BUTTON COMPONENT ---
 const FlipButton = ({ text, isSending, onClick, disabled }) => {
   const buttonVariants = {
     initial: {
@@ -121,9 +117,45 @@ const FlipButton = ({ text, isSending, onClick, disabled }) => {
   );
 };
 
+const DownloadBrochureButton = () => {
+  const BROCHURE_LINK = "https://drive.google.com/file/d/130dc6rJKYjoLTlq-j9onltY7yFG-mVDQ/view?usp=sharing";
+  
+  const buttonVariants = {
+    initial: {
+      backgroundColor: "#F81A27",
+      color: "#FFFFFF",
+    },
+    hover: {
+      backgroundColor: "#121212", 
+      scale: 1.03,
+      transition: { duration: 0.2 },
+    },
+    tap: {
+      scale: 0.97,
+    },
+  };
 
-
-// --- MAIN COMPONENT ---
+  return (
+    <motion.a
+      href={BROCHURE_LINK}
+      target="_blank"
+      rel="noopener noreferrer"
+      variants={buttonVariants}
+      initial="initial"
+      whileHover="hover"
+      whileTap="tap"
+      className="mt-6 py-3 px-8 text-sm font-semibold uppercase tracking-widest transition duration-300 flex items-center justify-center gap-2"
+      style={{
+        borderRadius: "0px",
+        textDecoration: "none",
+        minWidth: "150px",
+      }}
+      aria-label="Download Company Brochure"
+    >
+      Download Brochure <Download className="w-4 h-4" />
+    </motion.a>
+  );
+};
 
 export default function ContactUs() {
   const [formData, setFormData] = useState({
@@ -155,7 +187,6 @@ export default function ContactUs() {
     }
   }, [showMap]);
 
-  // Form Validation Logic
   const validateEmail = (email) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
@@ -182,9 +213,6 @@ export default function ContactUs() {
     }
   };
 
-  // ------------------------------
-  // WEB3FORMS IMPLEMENTATION (Free & No Setup Required)
-  // ------------------------------
   const sendEmail = async (data) => {
     try {
       const response = await fetch("https://api.web3forms.com/submit", {
@@ -194,7 +222,7 @@ export default function ContactUs() {
           "Accept": "application/json",
         },
         body: JSON.stringify({
-          access_key: "067401e6-df31-46f1-9059-85504349082d", // Free public key for testing
+          access_key: "067401e6-df31-46f1-9059-85504349082d",
           subject: "New Contact Form Submission from Blitz Innovations Website",
           from_name: data.name,
           name: data.name,
@@ -220,7 +248,6 @@ export default function ContactUs() {
     }
   };
 
-  // Submit Handler
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isFormValid || isSending) return;
@@ -317,7 +344,6 @@ export default function ContactUs() {
         >
           <div className="flex flex-col lg:flex-row justify-between">
             
-            {/* LEFT CONTACT INFO */}
             <div className="w-full lg:w-2/3 xl:w-7/12 space-y-10 lg:space-y-14 mb-8 lg:mb-0 text-white">
               <motion.h1
                 variants={itemVariants}
@@ -347,30 +373,32 @@ export default function ContactUs() {
                 </motion.div>
               </div>
 
-              {/* Follow Us */}
               <motion.div
                 variants={itemVariants}
-                className="flex flex-wrap items-center gap-4 sm:gap-6 mt-6"
+                className="flex flex-col items-start gap-4 mt-6"
               >
-                <p className="text-sm uppercase tracking-widest text-white">— follow us</p>
-                {SOCIAL_LINKS.map(({ Icon, href, label }, i) => (
-                  <motion.a
-                    key={i}
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ scale: 1.1 }}
-                    transition={{ duration: 0.2 }}
-                    className="text-white hover:text-red-500 transition"
-                    aria-label={`Follow us on ${label}`}
-                  >
-                    <Icon className="w-5 h-5" />
-                  </motion.a>
-                ))}
+                <div className="flex flex-wrap items-center gap-4 sm:gap-6">
+                  <p className="text-sm uppercase tracking-widest text-white">— follow us</p>
+                  {SOCIAL_LINKS.map(({ Icon, href, label }, i) => (
+                    <motion.a
+                      key={i}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.1 }}
+                      transition={{ duration: 0.2 }}
+                      className="text-white hover:text-red-500 transition"
+                      aria-label={`Follow us on ${label}`}
+                    >
+                      <Icon className="w-5 h-5" />
+                    </motion.a>
+                  ))}
+                </div>
+                
+                <DownloadBrochureButton />
               </motion.div>
             </div>
 
-            {/* RIGHT FORM */}
             <motion.form
               onSubmit={handleSubmit}
               className="w-full mt-10 lg:mt-[100px] lg:ml-8 lg:w-2/5 xl:w-5/12 space-y-6"
@@ -405,7 +433,6 @@ export default function ContactUs() {
           </div>
         </motion.div>
 
-        {/* PAGE LABEL */}
         <div
           className="absolute bottom-4 right-10 text-white text-xs opacity-60 hidden sm:block"
           style={{ zIndex: contentZ }}
@@ -414,7 +441,6 @@ export default function ContactUs() {
           <p className="mt-1">Contact Us</p>
         </div>
 
-        {/* FIND / BACK BUTTON */}
         <motion.button
           onClick={() => setShowMap(!showMap)}
           animate={{
