@@ -142,7 +142,7 @@ export default function Footer() {
         whileInView={{ opacity: 1 }}
         transition={{ duration: 1.5, delay: 0.3 }}
       >
-        © {year} <span className="text-white font-medium">Blitz Innovations</span> — All rights reserved.
+        © {year} <span className="text-white font-medium">Blitz Innovation</span> — All rights reserved.
       </motion.div>
 
       <div className="absolute top-0 left-1/4 w-[250px] h-[250px] bg-[#F81A27] opacity-10 blur-[100px] rounded-full animate-pulse"></div>

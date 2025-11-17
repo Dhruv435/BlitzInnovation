@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import Header from "./components/Header";
 import Home from "./pages/Home";
@@ -26,17 +26,41 @@ export default function App() {
       setIsLoading(true);
       setTimeout(() => {
         navigate(route);
-        // Delay the turn-off of isLoading state until after the tiles have closed
-        // 400ms is for the navigation delay, plus the tile close duration (~4*50ms)
         setTimeout(() => {
           setIsLoading(false);
-        }, 300); // Increased this delay slightly for a smoother transition end
-      }, 400); // This is the tile open duration
+        }, 300);
+      }, 400);
     }
   };
 
+  // ⭐ CUSTOM CURSOR LOGIC (FINAL WORKING VERSION)
+  useEffect(() => {
+    const cursor = document.querySelector(".cursor");
+
+    const moveCursor = (e) => {
+      cursor.style.transform = `translate(${e.clientX - 10}px, ${e.clientY - 10}px)`;
+    };
+
+    const clickCursor = () => {
+      cursor.classList.add("expand");
+      setTimeout(() => cursor.classList.remove("expand"), 500);
+    };
+
+    document.addEventListener("mousemove", moveCursor);
+    document.addEventListener("click", clickCursor);
+
+    return () => {
+      document.removeEventListener("mousemove", moveCursor);
+      document.removeEventListener("click", clickCursor);
+    };
+  }, []);
+
   return (
     <div className="bg-[#1B1716] min-h-screen text-white font-inter relative">
+
+      {/* ⭐ CUSTOM CURSOR ELEMENT */}
+      <div className="cursor"></div>
+
       {/* Transition Tiles */}
       <div
         className={`fixed right-0 z-[35] transition-all ${
@@ -84,19 +108,21 @@ export default function App() {
               currentSlide={currentSlide}
               onSlideChange={handleSlideChange}
               onNavigate={handleNavigation}
-              isTransitioning={isLoading} // Added prop
+              isTransitioning={isLoading}
             />
           }
         />
+
         <Route 
           path="/about" 
           element={
             <About 
               onNavigate={handleNavigation} 
-              isTransitioning={isLoading} // Added prop
+              isTransitioning={isLoading}
             />
           } 
         />
+
         <Route path="/services" element={<Services />} />
         <Route path="/blogs" element={<Blogs />} />
         <Route path="/projects" element={<Projects />} />

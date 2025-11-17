@@ -44,7 +44,7 @@ const TEAM_DATA = [
     name: "Keval Gadara",
     role: "Founder & CEO",
     // Placeholder image link for a male visionary/leader
-    imageUrl: "https://videos.openai.com/az/vg-assets/task_01ka6ggns7ewv8ydj5w05kb86j%2F1763302826_img_0.webp?se=2025-11-20T00%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&skoid=8ebb0df1-a278-4e2e-9c20-f2d373479b3a&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-11-16T01%3A48%3A57Z&ske=2025-11-23T01%3A53%3A57Z&sks=b&skv=2024-08-04&sig=ZE6ev2OIlDZqHNg9DjLcYh/KAnSLwA0sjm3b/gEyZOQ%3D&ac=oaivgprodscus2",
+    imageUrl: "https://i.pinimg.com/736x/d6/36/d5/d636d53048eccf75fed71e3add231b94.jpg",
     description: "Visionary leader and head strategist.",
     // Dark red overlay
     overlayColor: "rgba(248, 26, 39, 0.75)",
@@ -53,7 +53,7 @@ const TEAM_DATA = [
     name: "Prit Chadamiya",
     role: "Director & CFO",
     // Placeholder image link for a male financial expert
-    imageUrl: "https://videos.openai.com/az/vg-assets/task_01ka6hmevffc6te26rrkb8ae2p%2F1763304020_img_0.webp?se=2025-11-20T00%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&skoid=8ebb0df1-a278-4e2e-9c20-f2d373479b3a&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-11-16T01%3A48%3A57Z&ske=2025-11-23T01%3A53%3A57Z&sks=b&skv=2024-08-04&sig=4A3OVaFBOLiy0KUzkymY1JR25j6oGVD1ltXJrC8lUYw%3D&ac=oaivgprodscus2",
+    imageUrl: "https://i.pinimg.com/736x/1d/36/03/1d36037951e66042f1b379a84b07a6c3.jpg",
     description: "Financial expert and corporate director.",
     // Darker red overlay
     overlayColor: "rgba(200, 20, 30, 0.8)",
