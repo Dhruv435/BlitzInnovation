@@ -83,7 +83,6 @@ export default function Footer() {
           {services.map((service, index) => (
             <motion.a
               key={index}
-              href="#"
               className="text-gray-400 hover:text-white text-sm transition-all duration-300"
               whileHover={{ x: 6 }}
             >
