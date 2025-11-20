@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import logo from "../assets/Blitzlogo.png";
+import { FaXTwitter } from "react-icons/fa6";
 import {
   Send,
   X,
@@ -16,7 +17,6 @@ import {
 import {
   FaInstagram,
   FaLinkedinIn,
-  FaTwitter,
   FaWhatsapp,
 } from "react-icons/fa";
 
@@ -46,7 +46,7 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
   const shareItems = [
     { icon: <FaInstagram size={20} />, label: "Instagram", url: "https://www.instagram.com/blitz.innovation?igsh=MTZ6aW9heTFmOWkxag==" },
     { icon: <FaLinkedinIn size={20} />, label: "LinkedIn", url: "https://www.linkedin.com/company/blitz-innovations/" },
-    { icon: <FaTwitter size={20} />, label: "Twitter", url: "https://x.com/BlitzInnovation" },
+    { icon: <FaXTwitter size={20} />, label: "Twitter", url: "https://x.com/BlitzInnovation" },
     { icon: <FaWhatsapp size={20} />, label: "WhatsApp", url: "https://wa.me/916353274199?text=hello%20blitz" },
   ];
 
@@ -125,7 +125,6 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
           backdropFilter: "blur(9px)",
         }}
       >
-        {/* ✅ Left: Logo */}
         <div className="flex items-center ml-[-7px] sm:ml-[30px]">
           <img
             src={logo}
@@ -135,7 +134,6 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
           />
         </div>
 
-        {/* ✅ Right: Menu + Share Buttons */}
         <div className="flex fixed top-0 right-0">
           {buttons.map((btn, i) => (
             <div
@@ -152,14 +150,14 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
                   onClick={handleMenuClick}
                   className="btn-flip-menu focus:outline-none w-full h-full flex items-center justify-center"
                 >
-                  {/* --- MENU LOGIC START --- */}
+                  
                   {menuOpen ? (
-                    // State: Menu is OPEN (Show X icon immediately)
+                    
                     <X className="text-[#1B1716]" size={26} />
                   ) : (
-                    // State: Menu is CLOSED (Enable flip animation on hover for desktop, direct show for mobile)
+                    
                     <>
-                      {/* Hamburger Icon */}
+                      
                       <div className="btn-flip-front">
                         <div className="flex flex-col justify-between w-[18px] h-[18px]">
                           <div className="bg-[#1B1716] h-[3px] w-1/2 rounded"></div>
@@ -167,44 +165,43 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
                           <div className="bg-[#1B1716] h-[3px] w-1/2 rounded self-end"></div>
                         </div>
                       </div>
-                      {/* Text: MENU */}
                       <div className="btn-flip-back">
                         <span className="text-[#fff] font-semibold text-xs">MENU</span>
                       </div>
                     </>
                   )}
-                  {/* --- MENU LOGIC END --- */}
+                  
                 </button>
               ) : (
                 <button
                   onClick={handleShareClick}
                   className="btn-flip-share focus:outline-none w-full h-full flex items-center justify-center"
                 >
-                  {/* --- SHARE LOGIC START --- */}
+                  
                   {shareOpen ? (
-                    // State: Share is OPEN (Show X icon immediately)
+                    
                     <X size={26} className="text-[#1B1716]" />
                   ) : (
-                    // State: Share is CLOSED (Enable flip animation on hover for desktop, direct show for mobile)
+                    
                     <>
-                      {/* Text: SHARE */}
+                      
                       <div className="btn-flip-front">
                         <span style={{ color: "#1B1716", fontWeight: "600", fontSize: "13px" }}>SHARE</span>
                       </div>
-                      {/* Icon: Send */}
+                      
                       <div className="btn-flip-back">
                         <Send size={24} className="text-[#fff]" />
                       </div>
                     </>
                   )}
-                  {/* --- SHARE LOGIC END --- */}
+                  
                 </button>
               )}
             </div>
           ))}
         </div>
 
-        {/* ✅ MENU LIST */}
+        
         <div className="fixed top-[70px] sm:top-[65px] right-0 z-30 flex flex-col items-end pointer-events-none">
           {menuItems
             .filter((item) => item.page !== currentPath)
@@ -256,7 +253,7 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
             ))}
         </div>
 
-        {/* ✅ SHARE BOX */}
+        
         <div className="fixed top-[70px] sm:top-[65px] right-0 z-30 flex flex-col items-end pointer-events-none">
           {shareItems.map((item, index) => (
             <div
@@ -285,7 +282,7 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
           ))}
         </div>
 
-        {/* ✅ Animations and Mobile styles */}
+        
         <style jsx>{`
           @keyframes slide-up {
             0% {
@@ -309,29 +306,29 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
               width: 140px !important;
               height: 55px !important;
             }
-            /* ✅ MOBILE ONLY: Disable flip state transitions */
+            
             .btn-flip-menu:hover .btn-flip-front,
             .btn-flip-menu:active .btn-flip-front,
             .btn-flip-share:hover .btn-flip-front,
             .btn-flip-share:active .btn-flip-front {
-              /* Keep front face visible and rotated normally */
+              
               transform: translateY(0) rotateX(0);
               opacity: 1;
-              transition: none; /* Disable transition for immediate change */
+              transition: none; 
             }
 
             .btn-flip-menu:hover .btn-flip-back,
             .btn-flip-menu:active .btn-flip-back,
             .btn-flip-share:hover .btn-flip-back,
             .btn-flip-share:active .btn-flip-back {
-              /* Keep back face hidden and rotated away */
+              
               transform: translateY(-50%) rotateX(90deg);
               opacity: 0;
-              transition: none; /* Disable transition for immediate change */
+              transition: none; 
             }
           }
 
-          /* Flip Animation Styles for Menu and Share Buttons */
+          
           .btn-flip-menu,
           .btn-flip-share {
             position: relative;
@@ -361,10 +358,10 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
             background: #141414;
           }
 
-          /* --- Desktop Flip Logic (RE-WRAPPED for Desktop ONLY) --- */
+          
+          
 
-          /* Menu Button Flip */
-          /* ✅ Only apply hover/active for desktop to allow mobile CSS override to take over */
+          
           @media (min-width: 641px) {
             .btn-flip-menu:hover .btn-flip-front,
             .btn-flip-menu:active .btn-flip-front {
@@ -379,8 +376,7 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
             }
           }
 
-          /* Share Button Flip */
-          /* ✅ Only apply hover/active for desktop to allow mobile CSS override to take over */
+          
           @media (min-width: 641px) {
             .btn-flip-share:hover .btn-flip-front,
             .btn-flip-share:active .btn-flip-front {
@@ -395,7 +391,7 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
             }
           }
           
-          /* Flip Animation Styles for Arrow Buttons (No Change) */
+          
           .btn-flip-arrow {
             position: relative;
             perspective: 1000px;
@@ -429,7 +425,7 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
             background: #141414;
           }
 
-          /* Arrow Button Flip */
+          
           .btn-flip-arrow:hover .arrow-flip-front,
           .btn-flip-arrow:active .arrow-flip-front {
             transform: translateY(50%) rotateX(90deg);
@@ -442,7 +438,7 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
             opacity: 1;
           }
 
-          /* Desktop only hover effects */
+          
           @media (hover: hover) and (pointer: fine) {
             .menu-item-hover:hover {
               filter: brightness(1.1);
@@ -456,7 +452,7 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
         `}</style>
       </header>
 
-      {/* ✅ BOTTOM SLIDER CONTROLS - Left side at bottom 0px */}
+      
       {currentPath === "/" && (
         <div className="fixed bottom-0 left-0 z-30 flex">
 
@@ -470,7 +466,7 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
       }}
     ></div>
 
-          {/* Left Arrow Button */}
+          
           <div
             onClick={handlePrevSlide}
             className={`w-[70px] h-[70px] sm:w-[70px] sm:h-[70px] cursor-pointer ${
@@ -490,7 +486,7 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
             </div>
           </div>
 
-          {/* Right Arrow Button */}
+          
           <div
             onClick={handleNextSlide}
             className={`w-[70px] h-[70px] sm:w-[70px] sm:h-[70px] cursor-pointer ${
@@ -510,7 +506,7 @@ export default function Header({ currentSlide, onSlideChange, totalSlides, onNav
             </div>
           </div>
 
-          {/* Explore Now Button - MOBILE ONLY (Full Width) */}
+          
           <div
             onClick={handleExploreClick}
             className="sm:hidden flex items-center justify-center h-[70px] cursor-pointer transition-all duration-300 hover:opacity-80 hover:bg-opacity-90"

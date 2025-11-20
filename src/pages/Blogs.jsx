@@ -1,46 +1,137 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 import { FaShareAlt, FaHeart, FaTimes, FaArrowRight, FaCalendarAlt, FaUser, FaQuoteRight } from "react-icons/fa";
-import Footer from "../components/Footer"; // Assuming Footer component exists
+import Footer from "../components/Footer";
 
-// --- Sample Data Enhancement ---
+
 const initialBlogs = [
   {
-    title: "Quantum Computing: A Red Shift",
-    author: "Jane Doe",
-    date: "Oct 15, 2025",
+    title: "Top 10 Ways AI is Transforming Project Management in 2026",
+    author: "",
+    date: "",
     excerpt:
-      "Quantum entanglement promises a red-hot revolution in computational science, moving us beyond classical limits.",
-    tags: ["Quantum", "Tech", "Future"],
-    img: "https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?q=80&w=1200",
+      "AI automation, predictive analytics, and smart workflows are reshaping how teams plan, track, and deliver projects.",
+    tags: ["AI", "Project Management", "Automation"],
+    img: "https://i.pinimg.com/736x/93/b2/53/93b253bf663f802262bbce23fdaeb024.jpg",
     fullContent:
-      "The convergence of quantum physics and computer science is creating a new paradigm for computation. This shift promises to solve problems currently intractable for even the most powerful supercomputers, primarily in areas like molecular modeling, drug discovery, and advanced AI optimization. The 'Red Shift' in our title refers to the monumental change and the intensity of this new technological era, marked by blazing-fast calculations and complex system simulations. We delve into the foundational principles of qubits, superposition, and entanglement, and analyze the commercial viability of current leading quantum hardware platforms.",
+      `
+      What is Microsoft Project?
+      <br/><br/>
+      Microsoft Project (MS Project) is a project management software developed by Microsoft to help project managers plan, organize, and oversee their projects effectively. It supports creating project plans, assigning resources, tracking progress, managing budgets, and analyzing workloads. First launched in 1984, it has since grown into a comprehensive tool used by organizations of all sizes.
+MS Project offers a variety of features such as Gantt charts for visualizing and scheduling projects, resource management tools for assigning and overseeing tasks, and budget tracking to monitor costs and expenses. It also includes reporting capabilities that allow managers to evaluate project performance and share updates with stakeholders.
+Over time, Microsoft has continued to enhance MS Project with upgrades that introduce new functionalities and refine existing features.
+
+      
+      <br/><br/>
+      1. Microsoft Project Standard
+      <br/><br/>
+      Microsoft Project Standard is a desktop-based project management solution designed to help with project planning, execution, and monitoring. It works best for individuals or small teams handling projects. Key features include Gantt charts for scheduling, resource management functions like allocation and leveling, as well as cost tracking with budget baselines. Users can also create customized reports to match their requirements. In addition, it integrates smoothly with Microsoft office and other Microsoft applications. 
+ 
+      <br/><br/>
+      2. Microsoft Project Professional
+      <br/><br/>
+     Microsoft Project Professional builds on the Standard edition by offering advanced capabilities tailored for experienced project managers and larger teams. Along with all the features of Standard, it adds collaboration tools like real-time teamwork and integration with Microsoft Project Server and Project Online (covered later). It supports resource management across multiple projects and provides more advanced reporting options, including interactive dashboards. When paired with Project Online, this software can also be accessed from virtually anywhere.
+    
+      <br/><br/>
+      3. Microsoft Project Online
+      <br/><br/>
+      Microsoft Project Online is a collaborative project and portfolio management solution within the Microsoft 365 suite. It integrates seamlessly with Microsoft Project for the Web and Microsoft Project Professional. One of its standout features is portfolio management, which allows organizations to prioritize and align projects with strategic goals. It also offers customizable dashboards and strong resource management capabilities, enabling teams to allocate resources across multiple projects, optimize utilization, and monitor availability effectively.
+    
+      <br/><br/>
+      4. Microsoft Project Server
+
+      <br/><br/>
+      One challenge with MS project management software is the wide range of options, which can make it hard for organizations to select the right tool. Microsoft Project Server is a good example of this. It is an enterprise-level solution that connects with Microsoft Project Professional and Microsoft Project Online.
+
+Designed for large-scale projects and portfolios, it offers strong resource management and enterprise-wide project coordination. Project Server can be deployed on-premises or in hybrid models and integrates well with other Microsoft technologies.
+    
+      `, },
+  {
+    title: "Top 10 Analytics and Business Intelligence Trends For 2026",
+    author: "",
+    date: "",
+    excerpt:
+      "Data-driven decisions are evolving with trends like augmented analytics, real-time data pipelines, and AI-powered dashboards.",
+    tags: ["Analytics", "Business Intelligence", "Data"],
+    img: "https://i.pinimg.com/736x/c9/44/70/c9447043f930be1f3bdf1ef261a0a199.jpg",
+    fullContent:
+      `
+      Over the last decade, business intelligence has experienced tremendous growth. With the explosion of data and the widespread adoption of cloud technology, organizations have moved beyond traditional spreadsheets toward dynamic data visualizations and interactive dashboards that drive action. The emergence of self-service analytics has further democratized data, making advanced analysis accessible to a wider range of users beyond just data specialists. 
+      <br/><br/>
+      The year 2025 marked a significant milestone for the BI industry, and many of the trends that took shape will continue to evolve in 2026. However, the business intelligence sector is undergoing rapid transformation. Many enterprises are investing in business intelligence services to transform large volumes of data into actionable business insights. The future of BI is unfolding now, bringing forward new trends and innovations.
+      
+      <br/><br/>
+      In 2026, BI tools will become more tailored and personalized. Rather than asking whether they need business intelligence, companies of all sizes are now focused on finding the most effective BI solutions to meet their unique requirements.
+      <br/><br/>
+     According to MarketsandMarkets, the global business intelligence market size is projected to grow from USD 29.3 billion in 2025 to USD 54.9 billion by 2029, at a CAGR of 13.1%, reflecting the accelerating demand for smarter, data-driven decision-making. Are you eager to see what opportunities the new year holds? Keep reading to discover the top 10 business intelligence trends for 2026!
+      `,
   },
   {
-    title: "The Scarlet Web: Next Gen Security",
-    author: "John Smith",
-    date: "Nov 02, 2025",
+    title: "Top Benefits of Building an On-Demand App: Types, Features, and Cost",
+    author: "",
+    date: "",
     excerpt:
-      "Cutting-edge cybersecurity protocols designed to defend against Advanced Persistent Threats (APTs) in a quantum world.",
-    tags: ["Security", "Cyber", "Strategy"],
-    img: "https://images.unsplash.com/photo-1556155092-490a1ba16284?q=80&w=1200",
+      "From food delivery to home services, on-demand apps dominate the digital market—here’s why they are booming.",
+    tags: ["On-Demand Apps", "Mobile Apps", "Tech"],
+    img: "https://i.pinimg.com/1200x/ec/6b/d1/ec6bd1b31195fca9dce7201a6bf17ddd.jpg",
     fullContent:
-      "The 'Scarlet Web' refers to hidden, multi-layered network defense architectures required to operate securely against state-sponsored and sophisticated cyber-attacks. With the threat of quantum decryption looming, implementing post-quantum cryptography (PQC) is no longer optional—it's an imperative. This article explores zero-trust models, deceptive technology (honeypots), and the use of AI in threat prediction. The goal is to weave a defense system so complex and adaptive that even an APT will find no stable foothold. We also discuss incident response strategies that minimize dwell time and data exfiltration.",
+      `
+      Are you planning to create an on-demand app? 
+
+If your answer is yes, you’re already on the right track to boost customer satisfaction and loyalty. 
+
+Today’s consumers increasingly expect to access the products and services they need anytime and anywhere with just a few taps on their smartphones, and on-demand app development is meeting that expectation. 
+
+However, delivering such convenience and satisfaction requires careful consideration of several key factors. This guide to on-demand app development covers everything you need to know to build a high-quality on-demand application or marketplace solution. 
+
+From essential features and business benefits to cost insights, this article provides all the information you need to get started. 
+
+Let’s dive in!
+      <br/><br/>
+      What is On-Demand App Development?
+      
+      <br/><br/>
+      On-demand app development refers to the creation of mobile applications or web platforms that enable users to request various services and receive them quickly. Examples include popular apps like Uber, DoorDash, and Airbnb. In these platforms, users simply identify a need, access the app, and get connected to the right service provider. Essentially, on-demand apps act as a bridge between customers and businesses, facilitating instant service delivery and convenience.
+
+Businesses looking to create such solutions often partner with an on demand app development company. These companies specialize in designing and developing apps that streamline service delivery, enhance user experience, and ensure seamless interaction between customers and service providers. 
+      <br/><br/>
+     Features of On-Demand Service Apps
+      <br/><br/>
+     Developing a comprehensive on-demand service app involves careful planning to address the needs of all the users who will interact with it. Whether it’s customers requesting services, providers fulfilling those requests, or admins overseeing operations, each group requires specific features to ensure smooth functionality and communication. 
+
+While your business may choose to add or remove certain elements based on your goals, the following features represent the core components that every on-demand service app should include, no matter the industry. 
+
+On-demand service applications are already widely used across multiple industries, including healthcare, education, freelancing, food delivery, logistics, and many more.
+      `
   },
   {
-    title: "Crimson AI: Ethical Boundaries",
-    author: "Alex Johnson",
-    date: "Sep 28, 2025",
+    title: "15 Real-World Use Cases and Examples of AI in Fintech Industry",
+    author: "",
+    date: "",
     excerpt:
-      "Examining the moral and ethical 'red lines' that must govern the development of powerful AI systems.",
-    tags: ["AI", "Ethics", "Philosophy"],
-    img: "https://images.unsplash.com/photo-1518770660439-4636190bebc6?q=80&w=1200&auto=format&fit=crop", // ✅ Ensures consistent image
+      "AI is revolutionizing fraud detection, credit scoring, compliance, and customer service within the fintech space.",
+    tags: ["Fintech", "AI", "Finance"],
+    img: "https://i.pinimg.com/736x/b7/23/60/b72360e3917de1f3f7a8f8c1de6ccacf.jpg",
     fullContent:
-      "As Artificial Intelligence becomes more autonomous and integrated into critical infrastructure, establishing clear 'Crimson' or red-line ethical boundaries is paramount. This blog post critically analyzes algorithmic bias, the problem of accountability in deep learning systems, and the potential for unintended consequences. It advocates for transparent, explainable AI (XAI) models and proposes a framework for international AI governance. We argue that developers must move beyond mere capability and focus intensely on societal impact and human safety.",
+      `
+      Can artificial intelligence really foresee fraud before it happens? As fintech continues to transform at breakneck speed, AI is reshaping everything from risk assessment to customer service. The impact of Artificial Intelligence in fintech is no longer theoretical; it’s driving tangible change across industries right now.   
+
+McKinsey estimates that generative AI may unlock $340 billion per year for the banking sector, underscoring its game-changing role in fintech. This article explores 15 powerful, real-world use cases of AI in fintech industry, showing how innovation is driving smarter decisions, faster operations, and stronger financial outcomes. 
+      <br/><br/>
+      The Transformative Impact of Artificial Intelligence in Fintech  
+      
+      <br/><br/>
+      With the digitization of finance, the volume of data generated through transactions and services has surged. Artificial intelligence has a pivotal role in driving operational efficiency and strengthening business relationships by extracting and presenting actionable insights. Whether assessing risk to refining financial strategies, AI enhances precision and efficiency across the board.      
+
+The fintech landscape is shaped by key verticals such as digital banking, payments, personal finance, mobile wallets, investment platforms, and lending services. Integration of AI in fintech offerings enables intelligent apps and machine learning models to simplify complex data processing, automate workflows, and enhance decision-making. 
+
+Businesses looking to create such solutions often partner with an on demand app development company. These companies specialize in designing and developing apps that streamline service delivery, enhance user experience, and ensure seamless interaction between customers and service providers. 
+      `,
   },
+  
 ];
 
-// --- Custom Hook for 3D Tilt Effect ---
+
 const use3DTilt = () => {
   const ref = useRef(null);
   const x = useMotionValue(0);
@@ -64,7 +155,7 @@ const use3DTilt = () => {
   return { ref, rotateX, rotateY, handleMouseMove, handleMouseLeave };
 };
 
-// --- Main Blogs Component ---
+
 export default function Blogs() {
   const [blogs] = useState(initialBlogs);
   const [openBlog, setOpenBlog] = useState(null);
@@ -154,7 +245,7 @@ export default function Blogs() {
                       rotateX: isSelected ? 0 : rotateX,
                       rotateY: isSelected ? 0 : rotateY,
                       transformStyle: "preserve-3d",
-                      backgroundImage: `url(${blog.img})`, // ✅ Guarantee image rendering
+                      backgroundImage: `url(${blog.img})`,
                       backgroundSize: "cover",
                       backgroundPosition: "center",
                       backgroundRepeat: "no-repeat",
@@ -265,7 +356,8 @@ export default function Blogs() {
                       <FaQuoteRight className="min-w-6 text-red-700 mr-3 mt-1" />
                       <span>{openBlog.excerpt}</span>
                     </p>
-                    <p>{openBlog.fullContent}</p>
+                    <p dangerouslySetInnerHTML={{ __html: openBlog.fullContent }} />
+
                   </div>
 
                   <div className="mt-10 flex gap-4">

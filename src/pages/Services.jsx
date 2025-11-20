@@ -2,20 +2,16 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Footer from "../components/Footer";
 
-// Custom Button Component (FIXED for clean hover animation)
 const AnimatedButton = ({ text, onClick }) => {
 
   const buttonVariants = {
-    // Initial state (rest)
     rest: {
-      color: "rgb(255, 255, 255)", // White text
-      borderColor: "rgb(255, 255, 255)", // White border
+      color: "rgb(255, 255, 255)",
+      borderColor: "rgb(255, 255, 255)",
     },
-    // Hover state
     hover: {
-      color: "rgb(0, 0, 0)", // Black text
-      borderColor: "rgb(255, 255, 255)", // White border
-      // Transition the color immediately after the background slide starts
+      color: "rgb(0, 0, 0)",
+      borderColor: "rgb(255, 255, 255)",
       transition: {
         color: { duration: 0.2, delay: 0.15 },
         borderColor: { duration: 0.2 },
@@ -24,9 +20,8 @@ const AnimatedButton = ({ text, onClick }) => {
   };
 
   const backgroundVariants = {
-    // Initial state: Hidden off-screen (top-left)
     rest: {
-      backgroundColor: "#37474f", // Dark Blue-Grey
+      backgroundColor: "#37474f",
       transform: "translateX(-100%) translateY(-100%)",
       transition: {
         type: "tween",
@@ -34,9 +29,8 @@ const AnimatedButton = ({ text, onClick }) => {
         ease: [0.2, 1, 0.3, 1]
       }
     },
-    // Hover state: Slide in to cover the whole button (now looks white due to button body)
     hover: {
-      backgroundColor: "white", // Final background color for the slider div
+      backgroundColor: "white",
       transform: "translateX(0%) translateY(0%)",
       transition: {
         type: "tween",
@@ -49,36 +43,29 @@ const AnimatedButton = ({ text, onClick }) => {
   return (
     <motion.button
       className="button relative w-[170px] h-12 p-0 border-3 border-white font-poppins text-base overflow-hidden mt-4"
-      variants={buttonVariants} // Apply color variants here
+      variants={buttonVariants}
       whileHover="hover"
       initial="rest"
       onClick={onClick}
       style={{
-        // Set initial color and border styles directly or via Tailwind utilities (if possible)
         color: 'white',
         borderWidth: '3px',
         borderStyle: 'solid',
         borderColor: 'white',
       }}
     >
-      {/* Text layer - z-20 ensures it's above the slider */}
       <span className="relative z-20 text-center block leading-10">
         {text}
       </span>
       
-      {/* Background slide-in effect - z-10 for layering */}
       <motion.div
         className="absolute inset-0 z-10"
         variants={backgroundVariants}
-        // Setting initial backgroundColor to the initial fill color of the button (dark)
-        // Then, on hover, it slides in and changes to white, overriding the background.
-        // We ensure the outer button itself has a transparent background to let the slider show through cleanly.
       />
     </motion.button>
   );
 };
 
-// Custom Service Card Component incorporating the design
 const ServiceCardDesign = ({ title, desc, index, activeCard, setActiveCard }) => {
   const isExpanded = activeCard === index;
   const colors = ["#3953a4", "#6abd45", "#ed2024", "#FF5733", "#33FF57", "#5733FF"];
@@ -88,7 +75,6 @@ const ServiceCardDesign = ({ title, desc, index, activeCard, setActiveCard }) =>
     setActiveCard(isExpanded ? null : index);
   };
 
-  // Highlight specific words in red
   const highlightTitle = (text) => {
     return text
       .replace(/Workflow/gi, '<span class="text-red-500">Workflow</span>')
@@ -131,7 +117,6 @@ const ServiceCardDesign = ({ title, desc, index, activeCard, setActiveCard }) =>
         animate={{ y: isExpanded ? -20 : 0 }}
         transition={{ duration: 0.5 }}
       >
-        {/* Left Side: Title and Description */}
         <div className="md:w-1/2 text-left mb-6 md:mb-0">
           <motion.h1
             className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 font-poppins"
@@ -165,7 +150,6 @@ const ServiceCardDesign = ({ title, desc, index, activeCard, setActiveCard }) =>
           </AnimatePresence>
         </div>
 
-        {/* Right Side: Buttons */}
         <div className="md:w-1/2 flex flex-col items-start md:items-end text-left md:text-right w-full">
           <AnimatePresence mode="wait">
             {!isExpanded && (
@@ -197,7 +181,6 @@ const ServiceCardDesign = ({ title, desc, index, activeCard, setActiveCard }) =>
   );
 };
 
-// --- Main Services Component ---
 export default function Services() {
   const services = [
     {

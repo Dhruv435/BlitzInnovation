@@ -33,17 +33,17 @@ export default function App() {
     }
   };
 
-  // ⭐ CUSTOM CURSOR LOGIC (FINAL WORKING VERSION)
   useEffect(() => {
     const cursor = document.querySelector(".cursor");
+    const core = document.querySelector(".cursor-core");
 
     const moveCursor = (e) => {
       cursor.style.transform = `translate(${e.clientX - 10}px, ${e.clientY - 10}px)`;
     };
 
     const clickCursor = () => {
-      cursor.classList.add("expand");
-      setTimeout(() => cursor.classList.remove("expand"), 500);
+      core.classList.add("expand");
+      setTimeout(() => core.classList.remove("expand"), 500);
     };
 
     document.addEventListener("mousemove", moveCursor);
@@ -58,10 +58,12 @@ export default function App() {
   return (
     <div className="bg-[#1B1716] min-h-screen text-white font-inter relative">
 
-      {/* ⭐ CUSTOM CURSOR ELEMENT */}
-      <div className="cursor"></div>
+    
+      <div className="cursor">
+        <div className="cursor-core"></div>
+      </div>
 
-      {/* Transition Tiles */}
+      
       <div
         className={`fixed right-0 z-[35] transition-all ${
           isLoading ? "w-full delay-0" : "w-0 delay-[400ms]"

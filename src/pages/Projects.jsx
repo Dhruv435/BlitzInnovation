@@ -3,13 +3,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ExternalLink, Code, Smartphone, Palette, Layers } from "lucide-react";
 import Footer from "../components/Footer";
 
-// Animation Variants for smoother content fade-in
 const contentVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
 };
 
-// Panel transition duration
 const transition = { duration: 0.75, ease: "easeInOut" };
 
 export default function Projects() {
@@ -24,7 +22,6 @@ export default function Projects() {
     }
   };
 
-  // Project Data (Kept as is)
   const webProjects = [
     {
       name: "E-Commerce Platform",
@@ -97,21 +94,16 @@ export default function Projects() {
     },
   ];
 
-  // Helper function for dynamic panel motion properties
   const getPanelMotionProps = (expandedSide, currentSide) => {
     const isExpanded = expandedSide === currentSide;
     const isCollapsed = expandedSide !== 'none' && !isExpanded;
 
     return {
-      // **Smoother Animation:** Using layout to handle size changes automatically
       layout: true, 
       initial: false,
       animate: {
-        // Use flexGrow for clean distribution of remaining space
-        flexGrow: isExpanded ? 100 : isCollapsed ? 0 : 1, // 100 ensures full expansion
-        // Width will be handled by flexGrow, but setting a base width helps for a starting point
+        flexGrow: isExpanded ? 100 : isCollapsed ? 0 : 1, 
         width: isExpanded ? "100%" : isCollapsed ? "0%" : "50%",
-        // Height for side-by-side.
         height: "100vh", 
       },
       transition: transition,
@@ -125,7 +117,6 @@ export default function Projects() {
     };
   };
 
-  // Helper component for collapsible content
   const CollapsibleContent = ({ isExpanded, children }) => (
     <motion.div
       initial={false}
@@ -134,7 +125,6 @@ export default function Projects() {
         y: isExpanded ? 0 : 20 
       }}
       transition={{ duration: 0.3, delay: isExpanded ? 0.3 : 0 }}
-      // Added text-center here to ensure all nested text elements without explicit alignment inherit center
       className={`w-full h-full ${isExpanded ? 'pointer-events-auto' : 'pointer-events-none'} overflow-y-auto text-center`}
     >
       <AnimatePresence>
@@ -152,21 +142,18 @@ export default function Projects() {
     </motion.div>
   );
     
-  // --- Component for the panel content (to ensure consistent alignment) ---
   const PanelContent = ({ expanded, icon, title, subtitle, projects, isDark, side }) => (
-    // This wrapper is key: it centers the entire block (icon, title, text, grid) within the panel
     <div className="flex flex-col items-center justify-center p-8 md:p-20 lg:p-32 h-full w-full text-center">
       {expanded ? (
         <CollapsibleContent isExpanded={expanded}>
           {React.cloneElement(icon, { 
             className: `w-12 h-12 md:w-16 md:h-16 text-[#F81A27] mx-auto mb-4 md:mb-6` 
           })}
-          <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-10">{title}</h2>
+          <h2 className="text-xl md:text-3xl lg:text-4xl font-bold mb-10">{title}</h2>
           <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-xs md:text-lg mb-8 max-w-2xl mx-auto`}>
             {subtitle}
           </p>
 
-          {/* Added mx-auto to center the grid container */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 w-full max-w-5xl  mx-auto">
             {projects.map((project, index) => (
               <motion.div
@@ -202,7 +189,7 @@ export default function Projects() {
           {React.cloneElement(icon, { 
             className: `w-16 h-16 md:w-20 md:h-20 text-[#F81A27] mb-4 md:mb-6` 
           })}
-          <h2 className="text-3xl md:text-4xl lg:text-6xl font-bold">
+          <h2 className="text-2xl md:text-3xl lg:text-5xl font-bold">
             {title.toUpperCase()}
           </h2>
           <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} mt-2 text-xs md:text-base`}>
@@ -213,16 +200,14 @@ export default function Projects() {
     </div>
   );
 
-  // --- Button Component for clean repetition ---
   const ExpandButton = ({ section, side, Icon, isLeft, isExpanded }) => {
-    const isWhite = isLeft; // Left panel has the white button
+    const isWhite = isLeft; 
     const bgColor = isWhite ? 'bg-white text-black' : 'bg-black text-white';
     const hoverColor = isWhite ? 'hover:bg-gray-300' : 'hover:bg-gray-700';
     
-    // Positioning logic:
     const positionClasses = isLeft 
-      ? 'right-0 top-0 h-full w-48 justify-end' // Fixed for left panel's button on the right
-      : 'left-0 top-0 h-full w-48 justify-start'; // Fixed for right panel's button on the left
+      ? 'right-0 top-0 h-full w-48 justify-end' 
+      : 'left-0 top-0 h-full w-48 justify-start'; 
 
     return (
       <div className={`absolute flex items-center ${positionClasses} z-20`}>
@@ -235,7 +220,7 @@ export default function Projects() {
             ${bgColor} ${hoverColor} font-semibold shadow-lg 
             ${isLeft ? 'rounded-tl-lg md:rounded-tl-none rounded-bl-lg md:rounded-bl-none' : 'rounded-tr-lg md:rounded-tr-none rounded-br-lg md:rounded-br-none'}
             
-            // Mobile adjustments: make buttons small squares on the top corner
+            
             absolute ${isLeft ? 'top-0 right-0' : 'top-0 left-0'} w-16 h-16 md:relative md:w-[120px] md:h-48
           `}
         >
@@ -249,7 +234,6 @@ export default function Projects() {
 
   return (
     <div className="flex flex-col w-full bg-[#1B1716]">
-      {/* ===== TOP CONTENT SECTION (Kept text-center) ===== */}
       <section className="min-h-[60vh] flex flex-col items-left justify-left text-left ml-4 md:ml-10 text-[35px] ml-4 md:text-[48px md:px-20 pt-32 pb-16 bg-gradient-to-b from-[#0a0a0a]/30 to-transparent">
         <motion.h1
           initial={{ opacity: 0, y: 40 }}
@@ -282,9 +266,7 @@ export default function Projects() {
         </motion.p>
       </section>
 
-      {/* ===== FIRST PROJECT SECTION ===== */}
       <div className="flex flex-row h-[100vh] relative overflow-hidden"> 
-        {/* LEFT PANEL - WEB DEVELOPMENT */}
         <motion.div
           {...getPanelMotionProps(expandedSection1, "left")}
           style={{
@@ -309,7 +291,6 @@ export default function Projects() {
           />
         </motion.div>
 
-        {/* RIGHT PANEL - APP DEVELOPMENT */}
         <motion.div
           {...getPanelMotionProps(expandedSection1, "right")}
           style={{
@@ -335,9 +316,7 @@ export default function Projects() {
         </motion.div>
       </div>
 
-      {/* ===== SECOND PROJECT SECTION ===== */}
       <div className="flex flex-row h-[100vh] relative overflow-hidden">
-        {/* LEFT PANEL - UI/UX DESIGN */}
         <motion.div
           {...getPanelMotionProps(expandedSection2, "left")}
           style={{
@@ -362,7 +341,6 @@ export default function Projects() {
           />
         </motion.div>
 
-        {/* RIGHT PANEL - CUSTOM SOFTWARE */}
         <motion.div
           {...getPanelMotionProps(expandedSection2, "right")}
           style={{

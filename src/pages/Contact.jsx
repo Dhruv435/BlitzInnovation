@@ -269,7 +269,7 @@ export default function ContactUs() {
 
   const RAJKOT_COORDS = "22.3072,70.8022";
   const MAP_ZOOM = 12;
-  const mapUrl = `https://maps.google.com/maps?q=${RAJKOT_COORDS}&hl=en&z=${MAP_ZOOM}&output=embed`; 
+  const mapUrl = `https://maps.google.com/maps?q=22.842653,70.864822&hl=en&z=15&output=embed`; 
 
   const MAIN_BG = "#121212";
   const TEXT_COLOR = "#FFFFFF";
@@ -357,10 +357,10 @@ export default function ContactUs() {
                   <p className="text-xs uppercase tracking-widest text-red-500 font-bold">
                     ADDRESS
                   </p>
-                  <p className="text-sm font-light">604 Ceramic Empire,</p>
-                  <p className="text-sm font-light">Near New Indian Oil Petrol Pump,</p>
-                  <p className="text-sm font-light">Halvad–Ghuntu Road, Mahendranagar Chokdi,</p>
-                  <p className="text-sm font-light">Morbi – 363642</p>
+                  <p className="text-sm font-light">Morbi Halvad Road,</p>
+                  <p className="text-sm font-light">Mahendra Nagar,</p>
+                  <p className="text-sm font-light">Morbi - 363642</p>
+                  <p className="text-sm font-light">Gujarat, India.</p>
                 </motion.div>
 
                 <motion.div variants={itemVariants} className="space-y-3">
@@ -437,8 +437,8 @@ export default function ContactUs() {
           className="absolute bottom-4 right-10 text-white text-xs opacity-60 hidden sm:block"
           style={{ zIndex: contentZ }}
         >
-          / 28
-          <p className="mt-1">Contact Us</p>
+          
+          <p className="mt-1"></p>
         </div>
 
         <motion.button

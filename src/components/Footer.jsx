@@ -1,14 +1,14 @@
 import React from "react";
 import logo from "../assets/Blitzlogo.png";
 import { motion } from "framer-motion";
+import { FaXTwitter } from "react-icons/fa6";
 import {
   FaInstagram,
   FaLinkedinIn,
   FaFacebookF,
-  FaTwitter,
   FaWhatsapp,
 } from "react-icons/fa";
-import { Link } from "react-router-dom"; // ⭐ Added for navigation
+import { Link } from "react-router-dom";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -16,7 +16,7 @@ export default function Footer() {
   const socials = [
     { icon: <FaInstagram size={18} />, href: "https://www.instagram.com/blitz.innovation?igsh=MTZ6aW9heTFmOWkxag==" },
     { icon: <FaLinkedinIn size={18} />, href: "https://www.linkedin.com/company/blitz-innovations/" },
-    { icon: <FaTwitter size={18} />, href: "https://x.com/BlitzInnovation" },
+   { icon: <FaXTwitter size={18} />, href: "https://x.com/BlitzInnovation" },
     { icon: <FaWhatsapp size={18} />, href: "https://wa.me/916353274199?text=hello%20blitz" },
   ];
 
@@ -27,7 +27,6 @@ export default function Footer() {
     "Custom Software",
   ];
 
-  // ⭐ Updated with paths
   const links = [
     { name: "Home", path: "/" },
     { name: "About", path: "/about" },
@@ -96,7 +95,6 @@ export default function Footer() {
             Quick Links
           </h3>
 
-          {/* ⭐ ALL LINKS NOW WORK USING <Link> */}
           {links.map((item, index) => (
             <motion.div key={index} whileHover={{ x: 6 }}>
               <Link

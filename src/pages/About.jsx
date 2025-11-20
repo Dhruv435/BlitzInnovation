@@ -1,7 +1,5 @@
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-// IMPORTANT CHANGE: Use location, since we are handling navigation and
-// transition internally via a prop passed from App.jsx
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   Target,
@@ -19,10 +17,8 @@ import {
   ArrowRight,
   X,
 } from "lucide-react";
-// Assuming Footer is available at this path
 import Footer from "../components/Footer";
 
-// --- ANIMATION VARIANTS ---
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
   visible: { opacity: 1, y: 0 },
@@ -38,50 +34,41 @@ const staggerContainer = {
   },
 };
 
-// --- DATA (UPDATED WITH IMAGE URLS AND STYLES) ---
 const TEAM_DATA = [
   {
     name: "Keval Gadara",
     role: "Founder & CEO",
-    // Placeholder image link for a male visionary/leader
     imageUrl: "https://i.pinimg.com/736x/d6/36/d5/d636d53048eccf75fed71e3add231b94.jpg",
     description: "Visionary leader and head strategist.",
-    // Dark red overlay
     overlayColor: "rgba(248, 26, 39, 0.75)",
   },
   {
     name: "Prit Chadamiya",
     role: "Director & CFO",
-    // Placeholder image link for a male financial expert
     imageUrl: "https://i.pinimg.com/736x/1d/36/03/1d36037951e66042f1b379a84b07a6c3.jpg",
     description: "Financial expert and corporate director.",
-    // Darker red overlay
     overlayColor: "rgba(200, 20, 30, 0.8)",
   },
   {
-    name: "Umang Zalariya",
+    name: "Umang Patel",
     role: "CTO",
-    // Placeholder image link for a male technology officer
     imageUrl: "https://i.pinimg.com/736x/c2/3a/03/c23a0397c49922f805384defbefbd6c3.jpg",
     description: "Chief Technology Officer and architect of innovation.",
-    // Slightly more magenta overlay
     overlayColor: "rgba(230, 0, 50, 0.7)",
   },
   {
     name: "Vruti Gadara",
-    role: "Web Developer/COO/CPO",
-    // Placeholder image link for a female developer/operations head
+    role: "CPO",
     imageUrl: "https://i.pinimg.com/736x/10/d3/74/10d374f94b1e73a8ec94a24c4ac4e92a.jpg",
     description: "Full-stack developer, operations, and product head.",
-    // Bright red overlay
     overlayColor: "rgba(248, 26, 39, 0.85)",
   },
 ];
 
 const ACHIEVEMENTS_DATA = [
-  { icon: Users, number: "1000+", text: "Satisfied Clients" },
-  { icon: Globe, number: "25+", text: "Countries Served" },
-  { icon: Award, number: "50+", text: "Industry Awards" },
+  { icon: Users, number: "14+", text: "Satisfied Clients" },
+  { icon: Globe, number: "5+ Years", text: "Industry Experience" },
+  { icon: Award, number: "30+", text: "Project Done" },
   { icon: TrendingUp, number: "98%", text: "Client Retention" },
 ];
 
@@ -108,14 +95,11 @@ const VALUES_DATA = [
   },
 ];
 
-// --- COMPONENTS ---
-
 const TeamSection = () => {
   const sectionRef = useRef(null);
   const sliderRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Constants for mobile slider
   const numItems = TEAM_DATA.length;
 
   const goToPrev = () => {
@@ -126,21 +110,13 @@ const TeamSection = () => {
     setCurrentIndex((prevIndex) => (prevIndex === numItems - 1 ? 0 : prevIndex + 1));
   };
 
-  // Effect to scroll to the current index for mobile view on button click
   React.useEffect(() => {
     if (sliderRef.current && window.innerWidth < 1024) {
-      // Find the first child's width (assuming all cards have the same width)
       const firstChild = sliderRef.current.children[0];
       if (firstChild) {
-        // We need to account for the gap (space-x-6 or 8) which is 24px or 32px
-        // For 'space-x-6' (24px)
         const gapSize = 24; 
-        // Get the width of the card including its left/right margins, but since we use flex/gap,
-        // we mainly need the width and the position.
         const cardWidth = firstChild.offsetWidth; 
         
-        // Calculate the scroll position based on the current index, card width, and gap
-        // The scroll position should be the start of the current card.
         const scrollPosition = currentIndex * (cardWidth + gapSize);
 
         sliderRef.current.scrollTo({
@@ -171,7 +147,6 @@ const TeamSection = () => {
             The visionaries driving Blitz Innovation forward
           </p>
         </motion.div>
-        {/* --- DESKTOP VIEW (lg and up) --- */}
         <motion.div
           variants={staggerContainer}
           className="hidden lg:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8"
@@ -184,7 +159,6 @@ const TeamSection = () => {
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.3 }}
               style={{
-                // Custom background image styling
                 backgroundImage: `url(${member.imageUrl})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center center',
@@ -192,18 +166,14 @@ const TeamSection = () => {
                 transition: 'transform 0.5s ease-out, border-color 0.3s',
               }}
             >
-              {/* IMAGE / VECTOR BACKGROUND - Handled by inline style */}
-
-              {/* OVERLAY for Inset Box-Shadow Effect */}
               <div
                 className="absolute inset-0 bg-black/40 transition-all duration-500 ease-out"
                 style={{
-                  backgroundColor: 'rgba(20, 20, 20, 0.3)', // Initial dark state
+                  backgroundColor: 'rgba(20, 20, 20, 0.3)',
                   transition: 'background-color 0.5s ease-out',
                 }}
               ></div>
               
-              {/* Overlay that changes color on hover, similar to the box-shadow effect */}
               <div
                 className="absolute inset-0 transition-all duration-500 ease-out opacity-0 group-hover:opacity-100"
                 style={{
@@ -211,21 +181,17 @@ const TeamSection = () => {
                   }}
               ></div>
               
-              {/* Content Area - Always visible part */}
               <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-6 text-center z-10">
                 
-                {/* Container for Name and Role - This will move up on hover */}
                 <div className="transition-transform duration-500 group-hover:translate-y-[-100px]">
                     <h3 className="text-lg sm:text-xl font-bold text-red-600 mb-1">
                       {member.name}
                     </h3>
-                    {/* Role text color changed to red for visibility */}
                     <p className="text-white font-bold text-sm sm:text-base">
                       {member.role}
                     </p>
                 </div>
                 
-                {/* Hidden Description Text that fades in (FIXED) */}
                 <p
                   className="absolute bottom-4 left-0 right-0 p-4 text-white text-sm sm:text-base opacity-0 transition-opacity duration-300 delay-300 group-hover:opacity-100"
                 >
@@ -236,14 +202,11 @@ const TeamSection = () => {
             </motion.div>
           ))}
         </motion.div>
-        {/* --- MOBILE/TABLET SLIDER VIEW (below lg) --- */}
         <div className="lg:hidden">
-          {/* Slider Container - Hidden scrollbar, overflow-x-auto, snap-x */}
           <motion.div
             ref={sliderRef}
             variants={staggerContainer}
             className="flex overflow-x-scroll snap-x snap-mandatory pb-4 space-x-6 sm:space-x-8 scrollbar-hide"
-            // The scrollbar-hide class needs to be defined in your global CSS
             style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none' }}
           >
             {TEAM_DATA.map((member, index) => (
@@ -252,24 +215,19 @@ const TeamSection = () => {
                 variants={fadeUp}
                 className="flex-shrink-0 w-[85vw] sm:w-[calc(50vw-24px)] md:w-[calc(33.33vw-24px)] relative h-[350px] border-4 border-[#2E2A29] rounded-xl overflow-hidden snap-center group cursor-pointer"
                 style={{
-                  // Adjust margin for the first and last item to center them better
                   marginLeft: index === 0 ? 'auto' : undefined,
                   marginRight: index === numItems - 1 ? 'auto' : undefined,
-                  // Custom background image styling
                   backgroundImage: `url(${member.imageUrl})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center center',
                   transition: 'transform 0.5s ease-out, border-color 0.3s',
                 }}
               >
-                 {/* IMAGE / VECTOR BACKGROUND - Handled by inline style */}
-
-                {/* Initial Dark Overlay */}
+                 
                 <div
                   className="absolute inset-0 bg-black/50 transition-all duration-500 ease-out"
                 ></div>
                 
-                {/* Overlay that shows description on hover/tap */}
                 <div
                   className="absolute inset-0 flex flex-col items-center justify-center p-8 transition-all duration-500 ease-out opacity-0 group-hover:opacity-100"
                   style={{
@@ -281,7 +239,6 @@ const TeamSection = () => {
                     </p>
                 </div>
                 
-                {/* Content Area - Name and Role always visible at the bottom */}
                 <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 text-center z-10 bg-black/50 group-hover:opacity-0 transition-opacity duration-300">
                     <h3 className="text-lg sm:text-xl font-bold text-white mb-1">
                       {member.name}
@@ -293,7 +250,6 @@ const TeamSection = () => {
               </motion.div>
             ))}
           </motion.div>
-          {/* Custom Navigation Buttons (below container) - Changed to squared buttons */}
           <div className="flex justify-center mt-8 space-x-3">
             <motion.button
               onClick={goToPrev}
@@ -332,7 +288,6 @@ const HeroSection = () => {
       animate="visible"
       variants={staggerContainer}
     >
-      {/* Background Text */}
       <motion.h1
         className="absolute right-4 sm:right-10 lg:right-16 top-16 sm:top-20 lg:top-24 text-6xl sm:text-8xl lg:text-[200px] font-extrabold text-white opacity-5 select-none leading-none pointer-events-none"
         initial={{ opacity: 0, y: 50 }}
@@ -362,7 +317,6 @@ const HeroSection = () => {
             Our team of passionate professionals works tirelessly to create value for our clients, partners, and community — ensuring every project we undertake reflects our commitment to quality and progress.
           </p>
         </motion.div>
-        {/* Stats Grid */}
         <motion.div
           variants={staggerContainer}
           className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-12 sm:mt-16"
@@ -403,7 +357,6 @@ const MissionVisionSection = () => {
       variants={staggerContainer}
     >
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12">
-        {/* Mission */}
         <motion.div
           variants={fadeUp}
           className="bg-[#131313] border border-[#2E2A29] rounded-2xl p-6 sm:p-8 lg:p-10 relative overflow-hidden"
@@ -418,7 +371,6 @@ const MissionVisionSection = () => {
             Our mission is to <span className="text-white font-semibold">empower growth through innovation and reliability</span>. We strive to provide top-quality products and services that enhance experiences, simplify complexities, and inspire trust. By integrating modern technology and customer-centric strategies, Blitz aims to become a trusted name known for delivering excellence in every aspect of our work.
           </p>
         </motion.div>
-        {/* Vision */}
         <motion.div
           variants={fadeUp}
           className="bg-[#131313] border border-[#2E2A29] rounded-2xl p-6 sm:p-8 lg:p-10 relative overflow-hidden"
@@ -491,11 +443,10 @@ const ValuesSection = () => {
 const AchievementsSection = () => {
   const sectionRef = useRef(null);
   const achievements = [
-    "Successfully served 1000+ satisfied clients across various industries",
-    "Expanded our presence across 25+ regions, growing into a trusted global brand",
-    "Recognized for innovation and excellence through 50+ industry awards",
-    "Built long-term partnerships based on trust, transparency, and performance",
-    "Developed a strong culture of continuous improvement and professional growth",
+    "Successfully served 14+ satisfied clients.",
+    "Leveraging 5+ years of valuable industry experience.",
+    "Completed 30+ successful projects.",
+    "Maintain a high client retention rate of 98%.",
   ];
   return (
     <motion.section
@@ -539,19 +490,18 @@ const AchievementsSection = () => {
 };
 
 
-// MODIFIED: BorderFollowingButton to implement Flip-Fade effect
 const BorderFollowingButton = ({ children, onClick }) => {
   const buttonVariants = {
     rest: {
       scale: 1,
       rotateX: 0,
-      backgroundColor: "#F81A27", // Initial Color: Red
-      transition: { duration: 0.4, ease: [0.65, 0, 0.35, 1] }, // Custom ease for smooth flip
+      backgroundColor: "#F81A27",
+      transition: { duration: 0.4, ease: [0.65, 0, 0.35, 1] },
     },
     hover: {
       scale: 1.05,
-      rotateX: 5, // Slight tilt for 3D flip illusion
-      backgroundColor: "#141414", // Hover Color: Dark Grey
+      rotateX: 5,
+      backgroundColor: "#141414",
       transition: { duration: 0.4, ease: [0.65, 0, 0.35, 1] },
     },
     tap: {
@@ -560,7 +510,6 @@ const BorderFollowingButton = ({ children, onClick }) => {
     },
   };
 
-  // Text variants for a slight movement inside the flip
   const textVariants = {
     rest: { y: 0, color: "#ffffff", transition: { duration: 0.4 } },
     hover: { y: -2, color: "#ffffff", transition: { duration: 0.4 } },
@@ -576,11 +525,9 @@ const BorderFollowingButton = ({ children, onClick }) => {
       whileTap="tap"
       onClick={onClick}
       style={{
-        // Set perspective for the 3D effect to work
         perspective: "1000px",
-        // Ensure the rotation origin is centered
         transformStyle: "preserve-3d",
-        border: '1px solid #F81A27', // Use a solid border that won't show the initial background
+        border: '1px solid #F81A27',
       }}
     >
       <motion.span 
@@ -594,12 +541,10 @@ const BorderFollowingButton = ({ children, onClick }) => {
 };
 
 
-// MODIFIED: Accepts onNavigate prop
 const CTASection = ({ onNavigate }) => {
   const sectionRef = useRef(null);
 
   const handleNavigation = () => {
-    // Use the onNavigate function passed from App.jsx to trigger the transition and route change
     onNavigate("/contact");
   };
 
@@ -627,7 +572,6 @@ const CTASection = ({ onNavigate }) => {
             Ready to innovate? Whether you're a startup or an enterprise, Blitz Innovation is here to bring your ideas to life through technology that performs, scales, and inspires.
           </p>
 
-          {/* REPLACED BUTTON WITH NEW ANIMATION COMPONENT */}
           <BorderFollowingButton onClick={handleNavigation}>
             Get in Touch →
           </BorderFollowingButton>
@@ -637,7 +581,6 @@ const CTASection = ({ onNavigate }) => {
   );
 };
 
-// MODIFIED: Accepts onNavigate prop
 const MobileQuickNav = ({ onNavigate }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -652,7 +595,6 @@ const MobileQuickNav = ({ onNavigate }) => {
 
   const scrollToSection = (id) => {
     if (id === "cta") {
-      // Use the passed onNavigate prop to trigger the transition and route change
       onNavigate("/contact");
       setIsOpen(false);
       return;
@@ -680,7 +622,6 @@ const MobileQuickNav = ({ onNavigate }) => {
 
   return (
     <div className="lg:hidden">
-      {/* Quick Menu Button */}
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
         className="fixed bottom-0 left-0 z-50 h-[70px] bg-[#1B1716] text-white font-semibold flex items-center justify-center transition-all"
@@ -692,7 +633,6 @@ const MobileQuickNav = ({ onNavigate }) => {
       >
         Quick Menu
       </motion.button>
-      {/* Scroll to Top Button */}
       <AnimatePresence>
         {showScrollTop && (
           <motion.button
@@ -707,7 +647,6 @@ const MobileQuickNav = ({ onNavigate }) => {
           </motion.button>
         )}
       </AnimatePresence>
-      {/* Menu Overlay */}
       <AnimatePresence>
         {isOpen && (
           <>
@@ -756,7 +695,6 @@ const MobileQuickNav = ({ onNavigate }) => {
   );
 };
 
-// Main Component (UPDATED TO RECEIVE onNavigate PROP)
 export default function About({ onNavigate, isTransitioning }) {
   
   const initialOpacity = isTransitioning ? 1 : 0;
@@ -776,9 +714,7 @@ export default function About({ onNavigate, isTransitioning }) {
         <ValuesSection />
         <AchievementsSection />
         <TeamSection />
-        {/* Pass onNavigate to CTASection */}
         <CTASection onNavigate={onNavigate} />
-        {/* Pass onNavigate to MobileQuickNav */}
         <MobileQuickNav onNavigate={onNavigate} />
       </motion.div>
       <Footer />
